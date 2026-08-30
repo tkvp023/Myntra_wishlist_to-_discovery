@@ -1,6 +1,7 @@
+require('dotenv').config();
+process.env.DATABASE_URL = process.env.DATABASE_URL || 'file:./dev.db';
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 
 const productsRouter = require('./routes/products');
 const reviewsRouter = require('./routes/reviews');

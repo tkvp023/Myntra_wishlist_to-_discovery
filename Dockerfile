@@ -13,11 +13,13 @@ RUN npm install
 # Copy source code and seed files
 COPY backend/ ./
 
-# Generate Prisma client
-RUN npx prisma generate
-
+# Set default environment variables
+ENV DATABASE_URL="file:./dev.db"
 ENV PORT=3001
 ENV NODE_ENV=production
 EXPOSE 3001
+
+# Generate Prisma client
+RUN npx prisma generate
 
 CMD ["sh", "-c", "npx prisma generate && npx prisma db push && node prisma/seed.js && node src/index.js"]

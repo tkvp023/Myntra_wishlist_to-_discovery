@@ -1,3 +1,6 @@
+[variables]
+DATABASE_URL = "file:./dev.db"
+
 [phases.setup]
 nixPkgs = ["nodejs_20", "openssl"]
 
@@ -5,7 +8,8 @@ nixPkgs = ["nodejs_20", "openssl"]
 cmds = ["cd backend && npm install"]
 
 [phases.build]
-cmds = ["cd backend && npx prisma generate"]
+cmds = ["export DATABASE_URL=\"${DATABASE_URL:-file:./dev.db}\" && cd backend && npx prisma generate"]
 
 [start]
-cmd = "cd backend && npx prisma generate && npx prisma db push && node prisma/seed.js && node src/index.js"
+cmd = "export DATABASE_URL=\"${DATABASE_URL:-file:./dev.db}\" && cd backend && npx prisma generate && npx prisma db push && node prisma/seed.js && node src/index.js"
+
