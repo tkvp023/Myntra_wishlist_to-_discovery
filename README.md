@@ -61,25 +61,3 @@ Graduation_project_mvp/
         ├── middleware/     # Centralized error handler
         └── utils/          # badgeHelper.js (aggregates, threshold=50, safe JSON parsers)
 ```
-
----
-
-## 🚀 Quick Start (Local Development)
-
-### 1. Backend Setup
-```bash
-cd backend
-npm install
-npx prisma db push
-node prisma/seed.js
-npm run dev
-```
-Backend API will be running at `http://localhost:3001`.
-
-### 2. Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Frontend Web App will be running at `http://localhost:5173`.
