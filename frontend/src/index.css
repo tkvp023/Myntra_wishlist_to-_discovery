@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Assistant', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Assistant', sans-serif;
+
+  /* Myntra Official Brand Colors */
+  --color-myntra-pink: #FF3F6C;
+  --color-myntra-pink-hover: #E72744;
+  --color-myntra-pink-light: #FFF0F3;
+  --color-myntra-pink-subtle: #FFF5F7;
+
+  /* Text Hierarchy */
+  --color-myntra-dark: #282C3F;
+  --color-myntra-secondary: #535766;
+  --color-myntra-muted: #94969F;
+  --color-myntra-placeholder: #B4B6BE;
+
+  /* Ratings & Trust Badges */
+  --color-myntra-green: #14958F;
+  --color-myntra-rating: #03A685;
+  --color-myntra-star: #FFC700;
+  --color-myntra-amber: #F5A623;
+  --color-myntra-amber-bg: #FFF8E7;
+  --color-myntra-red: #D5284F;
+  --color-myntra-maroon: #6D1A36;
+  --color-myntra-red-bg: #FEF0EF;
+
+  /* Surfaces & Borders */
+  --color-myntra-bg: #FFFFFF;
+  --color-myntra-section: #F5F5F6;
+  --color-myntra-border: #EAEAEC;
+  --color-myntra-border-dark: #D4D5D9;
+  --color-myntra-discount: #FF905A;
+}
+
+/* Global Reset & Base Styles */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  color: var(--color-myntra-dark);
+  background-color: #0A0C14; /* Deep luxury dark background on desktop to frame phone */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile App Frame Styling */
+.app-frame-wrapper {
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: radial-gradient(circle at 50% 20%, #1A1D2E 0%, #0A0C14 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 440px) {
+  .app-frame-wrapper {
+    background: #FFFFFF;
+    padding: 0;
+    height: 100vh;
+  }
+}
+
+.mobile-phone-container {
+  width: 100%;
+  max-width: 412px;
+  height: 100%;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+@media (min-width: 441px) {
+  .mobile-phone-container {
+    height: 100%;
+    max-height: calc(100vh - 58px);
+    width: 416px;
+    border-radius: 36px;
+    border: 8px solid #1E2235;
+    outline: 2px solid #2D334D;
+    box-shadow: 
+      0 20px 50px -10px rgba(0, 0, 0, 0.8),
+      0 0 60px rgba(255, 63, 108, 0.12);
+  }
+}
+
+/* Hide scrollbar but maintain scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Micro animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}

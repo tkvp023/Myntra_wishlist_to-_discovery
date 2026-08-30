@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Myntra Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#dee1fa",
+                      "on-surface-variant": "#5b4042",
+                      "on-primary-container": "#fffbff",
+                      "placeholder": "#94969F",
+                      "outline": "#8f6f72",
+                      "surface-container-highest": "#dfe2f4",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#e3bdc0",
+                      "on-tertiary-fixed-variant": "#00504c",
+                      "on-tertiary-container": "#f3fffd",
+                      "inverse-primary": "#ffb2ba",
+                      "surface-variant": "#dfe2f4",
+                      "surface-container": "#eaedff",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#d6d9eb",
+                      "on-tertiary-fixed": "#00201e",
+                      "primary-fixed": "#ffd9dc",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#f2f3ff",
+                      "neutral-amber": "#F5A623",
+                      "primary-fixed-dim": "#ffb2ba",
+                      "secondary": "#5a5d73",
+                      "primary-container": "#df2457",
+                      "on-primary-fixed": "#400011",
+                      "primary": "#b90041",
+                      "secondary-container": "#dbdef8",
+                      "tertiary-fixed-dim": "#6cd8d1",
+                      "tertiary-container": "#00837d",
+                      "secondary-fixed-dim": "#c2c5de",
+                      "inverse-on-surface": "#eef0ff",
+                      "tertiary-fixed": "#8af4ed",
+                      "surface-pink": "#FFF0F3",
+                      "on-secondary-container": "#5e6177",
+                      "discount-orange": "#FF905A",
+                      "background": "#FFFFFF",
+                      "tertiary": "#006763",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2c303e",
+                      "surface-bright": "#faf8ff",
+                      "error-red": "#D5284F",
+                      "on-surface": "#171b28",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#42465a",
+                      "on-primary-fixed-variant": "#910031",
+                      "warning-maroon": "#6D1A36",
+                      "divider": "#F5F5F6",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e4e7fa",
+                      "surface-tint": "#bd0043",
+                      "surface": "#faf8ff",
+                      "on-background": "#171b28",
+                      "on-secondary-fixed": "#161b2d",
+                      "myntra-pink": "#FF3F6C"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-lg": "1.5rem",
+                      "stack-sm": "0.25rem",
+                      "section-gap": "2rem",
+                      "gutter-grid": "0.5rem",
+                      "stack-md": "0.75rem",
+                      "margin-mobile": "1rem"
+              },
+              "fontFamily": {
+                      "headline-md": ["beVietnamPro"],
+                      "label-price": ["inter"],
+                      "headline-lg": ["beVietnamPro"],
+                      "body-md": ["inter"],
+                      "label-discount": ["inter"],
+                      "display-brand": ["beVietnamPro"],
+                      "body-sm": ["inter"],
+                      "body-lg": ["inter"],
+                      "label-badge": ["inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["16px", {"lineHeight": "22px", "fontWeight": "600"}],
+                      "label-price": ["14px", {"lineHeight": "18px", "fontWeight": "700"}],
+                      "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "label-discount": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "display-brand": ["18px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "700"}],
+                      "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "body-lg": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "label-badge": ["10px", {"lineHeight": "12px", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Hide scrollbar for horizontal scrolling containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased pb-20 w-full max-w-[390px] mx-auto overflow-x-hidden shadow-xl min-h-screen relative">
+<!-- Top Navigation / Search Header -->
+<header class="sticky top-0 bg-background z-40 pb-2 shadow-sm">
+<div class="flex items-center justify-between px-margin-mobile pt-3 pb-2 gap-3">
+<!-- Search Bar -->
+<div class="flex-1 flex items-center bg-surface-container-low rounded-full px-3 h-10 border border-divider">
+<span class="material-symbols-outlined text-placeholder mr-2 text-[20px]" data-icon="search">search</span>
+<input class="bg-transparent border-none outline-none w-full font-body-sm text-body-sm text-on-surface placeholder:text-placeholder focus:ring-0 px-0 h-full" placeholder="Search for brands &amp; products" type="text"/>
+<div class="flex items-center gap-2 text-placeholder ml-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="mic">mic</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="photo_camera">photo_camera</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+<button class="relative">
+<span class="material-symbols-outlined text-on-surface text-[24px]" data-icon="notifications">notifications</span>
+</button>
+<button class="relative">
+<span class="material-symbols-outlined text-on-surface text-[24px]" data-icon="favorite_border">favorite_border</span>
+</button>
+</div>
+</div>
+<!-- Category Tabs -->
+<div class="flex px-margin-mobile gap-6 overflow-x-auto hide-scrollbar border-b border-divider">
+<button class="font-body-lg text-body-lg text-myntra-pink font-bold border-b-2 border-myntra-pink pb-2 whitespace-nowrap">ALL</button>
+<button class="font-body-lg text-body-lg text-on-surface-variant pb-2 whitespace-nowrap">MEN</button>
+<button class="font-body-lg text-body-lg text-on-surface-variant pb-2 whitespace-nowrap">WOMEN</button>
+<button class="font-body-lg text-body-lg text-on-surface-variant pb-2 whitespace-nowrap">KIDS</button>
+</div>
+</header>
+<main class="w-full pb-6">
+<!-- Quick Categories -->
+<section class="py-4 px-2">
+<div class="flex gap-4 overflow-x-auto hide-scrollbar px-2 snap-x">
+<div class="flex flex-col items-center gap-1 snap-start min-w-[72px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border border-divider">
+<img class="w-full h-full object-cover" data-alt="A brightly lit, stylized studio shot of a trendy fashion outfit featuring a colorful top and chic accessories, isolated against a soft pastel background. High contrast, modern e-commerce aesthetic, vibrant." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb9hG45J8htxaHGFzXa9UbEzG1MY0lHnKrobQlHJ2wYPIJp_3R6T5xeLudpO2CyPet69Y5XwImC5fPr7A-iuWn8vIDcBlJB4u8Dl8reSxclkxFWraDZHEq5pS1pWtIK_zshkMWeLPE18NIclStapeUHeEFk7aYAZJoymGegq39VFrLrJK7dN1zY9e3KIHRIuIm-qzkVEUdJ6yPwkNQR_Rl-xXtUCVGyNVTogg87NQU09Yl9-FD0e2S"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface text-center leading-tight">Fashion</span>
+</div>
+<div class="flex flex-col items-center gap-1 snap-start min-w-[72px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border border-divider">
+<img class="w-full h-full object-cover" data-alt="A minimalist composition of high-end beauty products, including a sleek lipstick and a glowing serum bottle, placed on a pristine white marble surface with soft, diffused natural lighting. Elegant, clean, modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqOrf4032H3PFe1KVyBR9jH2aQ2f0a-TM9J_Mtq5mS7x4psmtIiuMuPX0cDcn0YUW-xVrsFlcOWM9HKR-e4o2rReErNXSaWVE3ma-bE1vwLjSKHGXfdg_el10oK0iMLGfapn9K3HySLkC132HBTIvgo_-CZOTKD7a5Yzkr-mqYiHH8PjUSk0djBXrddqqPBs6UcuXA7SEwUMrtjUGUE9sXxLIqubK0iz3eAi8_4CJRTtYke4DLfujK"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface text-center leading-tight">Beauty</span>
+</div>
+<div class="flex flex-col items-center gap-1 snap-start min-w-[72px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border border-divider">
+<img class="w-full h-full object-cover" data-alt="A stylish lifestyle shot of modern sneakers floating mid-air against an energetic hot pink and grey background. Sharp focus, dynamic lighting, trendy streetwear vibe, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVr-Bz7YKw-JI_fI9R6m3dnuVgTo2h-V4_kPxnE7OavtogPedwDBNo85GUK5uQH8B8Lx7w6o7xknMDhcwAvx4U1VIsG1GIwWljDDbOzk4GxI7KZ9RGpOZ48RjK5kvJNj03IMQPhx0L9zr7HGoJG7CcD6W009Os7DqUTVpWEuV32Q12xFElMV_Xyer2VY4KQanmacwQsGwx9lcY04jDVAfROipuG1kizcG5jVb7x5TQFIdAoFUG13CQ"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface text-center leading-tight">Footwear</span>
+</div>
+<div class="flex flex-col items-center gap-1 snap-start min-w-[72px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border border-divider">
+<img class="w-full h-full object-cover" data-alt="A premium leather handbag displayed on a geometric pedestal, lit by dramatic directional light creating deep shadows. Rich textures, luxurious feel, sophisticated editorial style, neutral color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI0vHg7lgwnRuLEzWNT9E8nEGuRMAeF_6YvVZ53Ofd5phJ8qxVj6yz75-fp6WUJhrBg4YhV3BDrw9tUgFJhyPqPSHz9rCpWs-rDEKKCxux73utF0dz4zJtfW_N-LTdxg_pscrJEJEwOp2c7DIfN5F2Q_YdZLO4N_8vEZRf7BZTDDDEeEsq6GQ-Xfre_Nc_fJzDz_D2PRZn3FZ4zT-mAL0JT-AZNxenqJPAt4JtuCtS439khouH49sY"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface text-center leading-tight">Bags</span>
+</div>
+<div class="flex flex-col items-center gap-1 snap-start min-w-[72px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-high overflow-hidden shrink-0 border border-divider">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a delicate gold necklace and designer sunglasses lying on textured sand. Warm golden hour lighting, soft focus background, elegant lifestyle accessory shot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq7gam-yVdqRMM2F8UzpIDPOEKyDJ825qMa8napHJbNI1LDbTOX_eIoMIqISXScWzE6r_NvyFpRmqCIYGmkcFFPkFYzt62HTzKCGhiVkdGRsUqPZdohxsQrXfTQeJmzyurqFaRP7TyFbBV-uKJoPc4g80gmN2hCTD3y9gMxYpgC1KonOgxq5XiTRWJfOOXmLkzLIFM_gWSg_7P8DhCuJ06PFnmAEsrH9oHafck-UffBC5CoplaXv_Z"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface text-center leading-tight">Accessories</span>
+</div>
+</div>
+</section>
+<!-- Hero Banner Promo -->
+<section class="px-margin-mobile mb-section-gap relative">
+<div class="w-full h-[180px] rounded-xl overflow-hidden relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A vibrant, wide e-commerce promotional banner featuring a group of diverse, stylish young adults laughing and walking in trendy urban fashion. Overlaid with bold, high-contrast typography and graphic elements in energetic hot pink and crisp white. High energy, modern lifestyle photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeigDdsZRRgKe5VJOQD8YvZFA-CR5xGazrQ77JGJPYi24-PCRD4SLkObYfke23T5bRFYeTYHPYF2qIWMplMCq6s_VbRWZKgACx5nrf2PA_gNYVKm91w0wFvwTbngud1prhxsE4mjLLiJcoX28qF90dJ9w2dkOkwELkfsD-e-8HOOc5gi4irwRnRdEWVgyjAUVpCTcNPHj24B3d24MHhmYTSYkuZdwOCi_q8npwDgDU72ukZECZd-yW"/>
+<!-- Text Overlay Content -->
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent p-4 flex flex-col justify-center">
+<h2 class="font-headline-lg text-headline-lg text-white mb-1">Get 25% Off</h2>
+<p class="font-body-sm text-body-sm text-white/90 mb-3">On top brands this season</p>
+<div class="inline-flex bg-white/20 backdrop-blur-sm border border-white/30 rounded py-1 px-3 self-start items-center gap-2">
+<span class="font-label-discount text-label-discount text-white tracking-widest uppercase">Code: MYNTRASAVE</span>
+<span class="material-symbols-outlined text-white text-[14px]" data-icon="content_copy">content_copy</span>
+</div>
+</div>
+<!-- Carousel Dots -->
+<div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+<div class="w-2 h-2 rounded-full bg-white/50"></div>
+<div class="w-2 h-2 rounded-full bg-white/50"></div>
+<div class="w-2 h-2 rounded-full bg-white/50"></div>
+</div>
+</div>
+</section>
+<!-- Product Grid -->
+<section class="px-gutter-grid">
+<div class="flex items-center justify-between px-2 mb-3">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Trending Now</h3>
+</div>
+<div class="grid grid-cols-2 gap-gutter-grid">
+<!-- Product Card 1 -->
+<div class="flex flex-col bg-background relative cursor-pointer group">
+<div class="relative w-full aspect-[3/4] bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A studio catalog shot of a male model wearing a casual checkered Roadster shirt over a white tee. Clean grey background, soft box lighting, sharp focus on the fabric texture, professional e-commerce product photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXabrZtvy_i1Pl5AGQkgD6WtIB5MWVHjtigKJIuC_22YzAgDeIuxg3bUIv-0bMFlUplBsKoAYUgQNJoPJgk4oz99AH_2sOU93UtxvTsR7r9v_KhWxXBosJffZfy5ml5wjnPIuqbg4BZy7OFmpOPr5S7xeDCIX-gRHQuHau0qcnmuQyBWL_phEgOOleeD0O1c_vAocFwPkInWFTmDvHcpVAcpX4ZxtTqtdBz7HdZaXNzfmjnBxSWFke"/>
+<!-- Rating Pill Overlay -->
+<div class="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded flex items-center gap-1 shadow-sm">
+<span class="font-label-badge text-label-badge text-on-surface">4.3</span>
+<span class="material-symbols-outlined text-tertiary text-[10px] fill-icon" data-icon="star">star</span>
+<div class="w-[1px] h-2.5 bg-divider mx-0.5"></div>
+<span class="font-label-badge text-label-badge text-placeholder">2.1k</span>
+</div>
+</div>
+<div class="p-2 flex flex-col gap-1">
+<h4 class="font-body-md text-body-md font-bold text-on-surface truncate">Roadster</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Men Casual Shirt</p>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-label-price text-label-price text-on-surface">₹649</span>
+<span class="font-body-sm text-body-sm text-placeholder line-through text-[11px]">₹1709</span>
+<span class="font-label-discount text-label-discount text-discount-orange text-[11px]">62% OFF</span>
+</div>
+<!-- Trust Tag -->
+<div class="mt-1 inline-flex bg-surface-container px-2 py-1 rounded w-fit items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-[12px]" data-icon="verified">verified</span>
+<span class="font-body-sm text-body-sm text-tertiary text-[10px] font-medium leading-none">92% Feels Genuine</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="flex flex-col bg-background relative cursor-pointer group">
+<div class="relative w-full aspect-[3/4] bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A studio catalog shot showing the lower half of a male model wearing sleek, dark navy INVICTUS formal trousers paired with polished brown dress shoes. Clean light background, professional lighting, sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfPpy0JauMtXjDSCMB5i1R560o1aeIbDgyOB1v-4Z2943J0z-9m-1BfMA9PWwUbLkJ_V2xUKs9kqb6P_lUs1ceOAkWm2Mza19xm70aFeGCwOl1qm-yaEnUkHtpzVxGmQPIGbsTS6HgQo9fo24nLIFjqqRj62WN7evaVAdKjWhlMAvdq8CJF8QkV0TU64HFL4ME5TlLugWhDy4ROyLFbPOupBpfRr1QUmOCHj_1qZehb_5cGGVpd2F2"/>
+</div>
+<div class="p-2 flex flex-col gap-1">
+<h4 class="font-body-md text-body-md font-bold text-on-surface truncate">INVICTUS</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Men Formal Trousers</p>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-label-price text-label-price text-on-surface">₹1374</span>
+<span class="font-body-sm text-body-sm text-placeholder line-through text-[11px]">₹2499</span>
+<span class="font-label-discount text-label-discount text-discount-orange text-[11px]">45% OFF</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Implementation) -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 w-full max-w-[390px] z-50 bg-background shadow-[0_-4px_4px_rgba(0,0,0,0.04)] h-14 flex justify-around items-center px-2 pb-safe">
+<!-- Active Tab: Home -->
+<a class="flex flex-col items-center justify-center text-myntra-pink active:scale-95 transition-transform duration-150 w-16 group" href="#">
+<span class="material-symbols-outlined text-[24px] mb-0.5" data-icon="home" data-weight="fill">home</span>
+<span class="font-label-badge text-label-badge text-myntra-pink">Home</span>
+</a>
+<!-- Inactive Tab: Categories -->
+<a class="flex flex-col items-center justify-center text-placeholder hover:opacity-90 active:scale-95 transition-transform duration-150 w-16 group" href="#">
+<span class="material-symbols-outlined text-[24px] mb-0.5 group-hover:text-on-surface transition-colors" data-icon="category">category</span>
+<span class="font-label-badge text-label-badge text-placeholder group-hover:text-on-surface transition-colors">Categories</span>
+</a>
+<!-- Inactive Tab: Studio (from JSON but modified to match prompt request visually if needed, sticking to prompt: Wishlist with badge) -->
+<a class="flex flex-col items-center justify-center text-placeholder hover:opacity-90 active:scale-95 transition-transform duration-150 w-16 group relative" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px] mb-0.5 group-hover:text-on-surface transition-colors" data-icon="favorite">favorite</span>
+<!-- Badge -->
+<div class="absolute -top-1 -right-2 bg-myntra-pink text-white rounded-full w-4 h-4 flex items-center justify-center font-label-badge text-[9px] border border-background">3</div>
+</div>
+<span class="font-label-badge text-label-badge text-placeholder group-hover:text-on-surface transition-colors">Wishlist</span>
+</a>
+<!-- Inactive Tab: Profile -->
+<a class="flex flex-col items-center justify-center text-placeholder hover:opacity-90 active:scale-95 transition-transform duration-150 w-16 group" href="#">
+<span class="material-symbols-outlined text-[24px] mb-0.5 group-hover:text-on-surface transition-colors" data-icon="person">person</span>
+<span class="font-label-badge text-label-badge text-placeholder group-hover:text-on-surface transition-colors">Profile</span>
+</a>
+</nav>
+</body></html>

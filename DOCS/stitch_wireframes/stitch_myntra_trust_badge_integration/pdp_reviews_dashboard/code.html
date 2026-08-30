@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Myntra PDP - Ratings &amp; Reviews</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#dee1fa",
+                    "on-surface-variant": "#5b4042",
+                    "on-primary-container": "#fffbff",
+                    "placeholder": "#94969F",
+                    "outline": "#8f6f72",
+                    "surface-container-highest": "#dfe2f4",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#e3bdc0",
+                    "on-tertiary-fixed-variant": "#00504c",
+                    "on-tertiary-container": "#f3fffd",
+                    "inverse-primary": "#ffb2ba",
+                    "surface-variant": "#dfe2f4",
+                    "surface-container": "#eaedff",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#d6d9eb",
+                    "on-tertiary-fixed": "#00201e",
+                    "primary-fixed": "#ffd9dc",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f2f3ff",
+                    "neutral-amber": "#F5A623",
+                    "primary-fixed-dim": "#ffb2ba",
+                    "secondary": "#5a5d73",
+                    "primary-container": "#df2457",
+                    "on-primary-fixed": "#400011",
+                    "primary": "#b90041",
+                    "secondary-container": "#dbdef8",
+                    "tertiary-fixed-dim": "#6cd8d1",
+                    "tertiary-container": "#00837d",
+                    "secondary-fixed-dim": "#c2c5de",
+                    "inverse-on-surface": "#eef0ff",
+                    "tertiary-fixed": "#8af4ed",
+                    "surface-pink": "#FFF0F3",
+                    "on-secondary-container": "#5e6177",
+                    "discount-orange": "#FF905A",
+                    "background": "#FFFFFF",
+                    "tertiary": "#006763",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2c303e",
+                    "surface-bright": "#faf8ff",
+                    "error-red": "#D5284F",
+                    "on-surface": "#171b28",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed-variant": "#42465a",
+                    "on-primary-fixed-variant": "#910031",
+                    "warning-maroon": "#6D1A36",
+                    "divider": "#F5F5F6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e4e7fa",
+                    "surface-tint": "#bd0043",
+                    "surface": "#faf8ff",
+                    "on-background": "#171b28",
+                    "on-secondary-fixed": "#161b2d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-lg": "1.5rem",
+                    "stack-sm": "0.25rem",
+                    "section-gap": "2rem",
+                    "gutter-grid": "0.5rem",
+                    "stack-md": "0.75rem",
+                    "margin-mobile": "1rem"
+            },
+            "fontFamily": {
+                    "headline-md": [
+                            "beVietnamPro"
+                    ],
+                    "label-price": [
+                            "inter"
+                    ],
+                    "headline-lg": [
+                            "beVietnamPro"
+                    ],
+                    "body-md": [
+                            "inter"
+                    ],
+                    "label-discount": [
+                            "inter"
+                    ],
+                    "display-brand": [
+                            "beVietnamPro"
+                    ],
+                    "body-sm": [
+                            "inter"
+                    ],
+                    "body-lg": [
+                            "inter"
+                    ],
+                    "label-badge": [
+                            "inter"
+                    ]
+            },
+            "fontSize": {
+                    "headline-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "22px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-price": [
+                            "14px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-discount": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-brand": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-badge": [
+                            "10px",
+                            {
+                                    "lineHeight": "12px",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface w-full max-w-[390px] mx-auto overflow-x-hidden relative pb-[80px]">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full max-w-[390px] z-50 bg-background border-b border-divider flex items-center justify-between px-margin-mobile h-14">
+<button aria-label="Go back" class="p-2 -ml-2 text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-display-brand text-display-brand text-primary">Ratings &amp; Reviews</h1>
+<button aria-label="Search" class="p-2 -mr-2 text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+</header>
+<main class="pt-14 px-margin-mobile mt-4 flex flex-col gap-section-gap">
+<!-- Summary Section -->
+<section class="flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-tertiary text-on-tertiary px-3 py-2 rounded-lg flex items-center gap-1 font-label-price text-label-price">
+                        4.3 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 16px;">star</span>
+</div>
+<div class="font-body-md text-body-md text-secondary flex items-center gap-1">
+                        11,186 ratings &amp; 1,744 reviews <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- AI Tags -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+<div class="whitespace-nowrap flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full border border-divider font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px]">thumb_up</span> Style 9
+                </div>
+<div class="whitespace-nowrap flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full border border-divider font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px]">thumb_up</span> Softness 8
+                </div>
+<div class="whitespace-nowrap flex items-center gap-1 bg-surface-pink px-3 py-1.5 rounded-full border border-outline-variant font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-error-red">thumb_down</span> Stitching 2
+                </div>
+</div>
+</section>
+<!-- Trust-Verified Aggregates Carousel -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-stack-md">Trust-Verified Dashboard</h2>
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<!-- Card 1 -->
+<div class="min-w-[140px] bg-surface flex flex-col items-center justify-center p-4 rounded-xl border border-divider">
+<span class="material-symbols-outlined text-primary text-3xl mb-2">shield</span>
+<span class="font-headline-lg text-headline-lg text-tertiary mb-1">92%</span>
+<span class="font-body-sm text-body-sm text-center text-secondary">Feels Genuine</span>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[140px] bg-surface flex flex-col items-center justify-center p-4 rounded-xl border border-divider">
+<span class="material-symbols-outlined text-primary text-3xl mb-2">photo_camera</span>
+<span class="font-headline-lg text-headline-lg text-primary mb-1">87%</span>
+<span class="font-body-sm text-body-sm text-center text-secondary">Matches Photos</span>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[140px] bg-surface flex flex-col items-center justify-center p-4 rounded-xl border border-divider">
+<span class="material-symbols-outlined text-primary text-3xl mb-2">grid_on</span>
+<span class="font-headline-lg text-headline-lg text-on-surface mb-1">78%</span>
+<span class="font-body-sm text-body-sm text-center text-secondary">Fabric As Described</span>
+</div>
+<!-- Card 4 -->
+<div class="min-w-[140px] bg-surface flex flex-col items-center justify-center p-4 rounded-xl border border-divider">
+<span class="material-symbols-outlined text-primary text-3xl mb-2">thumb_up</span>
+<span class="font-headline-lg text-headline-lg text-on-surface mb-1">95%</span>
+<span class="font-body-sm text-body-sm text-center text-secondary">Satisfied</span>
+</div>
+</div>
+</section>
+<!-- Filter Chips Bar -->
+<section class="flex flex-col gap-3">
+<div class="flex gap-2 overflow-x-auto no-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-primary text-primary font-body-lg text-body-lg bg-surface-pink">
+                    All (144)
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-divider text-secondary font-body-lg text-body-lg bg-background flex items-center gap-1">
+                    Photo Match <span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-divider text-secondary font-body-lg text-body-lg bg-background flex items-center gap-1">
+                    Authenticity <span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-divider text-secondary font-body-lg text-body-lg bg-background">
+                    Fabric Feel
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-divider text-secondary font-body-lg text-body-lg bg-background flex items-center gap-1">
+                    5<span class="material-symbols-outlined text-[16px]">star</span>
+</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full border border-divider text-secondary font-body-lg text-body-lg bg-background flex items-center gap-1">
+                    4<span class="material-symbols-outlined text-[16px]">star</span>
+</button>
+</div>
+<div class="flex items-center justify-end gap-2">
+<span class="font-body-sm text-body-sm text-secondary">Disagree Only</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</section>
+<!-- Review Card -->
+<section class="flex flex-col gap-4">
+<div class="border-b border-divider pb-4">
+<div class="flex items-start justify-between mb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-md text-headline-md text-on-surface">Pallela Tharun Venkat</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary">Size: 39 | 12 Oct 2023</div>
+</div>
+<div class="bg-tertiary text-on-tertiary px-2 py-1 rounded flex items-center gap-1 font-label-badge text-label-badge">
+                        5 <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-3">
+                    The fabric is really soft and it matches exactly with the photos shown here. Totally worth the price, go for it!
+                </p>
+<div class="flex gap-2 mb-3">
+<div class="w-16 h-16 rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A detailed close-up product photo of a soft fabric texture, taken by a customer in bright daylight, showing high quality material, modern fashion aesthetic, vibrant colors, clear focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhrrV6cfP0DHXrOYpg1G5mSIG--FspBP5hayVacxLGrnPcv1zd5OjFmqSl92rfd60jv4aowsuETNRZ8X2ivMPPRhCgfnsVQ7AAtRafmA-JKWkBVlZqOcaabXUetfyIE3Xf_8U9FoDOtqmUr8--ICJ7cR0tWL5OJHUINK5-OwugwUbk0GhnKcu0KzGd5jcbpPHnGXAbaebRCPyIGdNMrE2rI_NdmovTmjXKYGXZdGiQoyhS6RfjdkyC"/>
+</div>
+</div>
+<div class="flex gap-2 flex-wrap">
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-tertiary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[12px]">check</span> Matches Photos
+                    </span>
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-tertiary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[12px]">check</span> Feels Genuine
+                    </span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation / CTA Area -->
+<div class="fixed bottom-0 w-full max-w-[390px] bg-background border-t border-divider p-4 z-50">
+<button class="w-full border border-primary text-primary font-headline-md text-headline-md h-11 rounded-lg flex items-center justify-center bg-background active:opacity-80 transition-opacity">
+            WRITE A REVIEW
+        </button>
+</div>
+</body></html>

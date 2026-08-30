@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                String         @id @default(cuid())
+  name              String
+  brand             String
+  category          String
+  subcategory       String?
+  gender            String?        // 'men', 'women', 'unisex', 'kids'
+  description       String
+  images            String         // JSON array of strings
+  mrp               Int
+  discountPercent   Int
+  finalPrice        Int
+  sizes             String         // JSON array of strings
+  color             String?
+  material          String?
+  fit               String?
+  rating            Float          @default(0)
+  reviewCount       Int            @default(0)
+  
+  fitTight          Int            @default(0)
+  fitJustRight      Int            @default(0)
+  fitLoose          Int            @default(0)
+  lengthShort       Int            @default(0)
+  lengthJustRight   Int            @default(0)
+  lengthLong        Int            @default(0)
+  
+  aiTags            String?        // JSON array of tag objects
+  applicableBadges  String         // JSON array of badge strings
+  
+  reviews           Review[]
+  wishlistItems     WishlistItem[]
+  
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Review {
+  id                       String    @id @default(cuid())
+  productId                String
+  product                  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  userName                 String
+  rating                   Int
+  text                     String?
+  sizeBought               String?
+  
+  badgeAuthenticity        String?
+  badgeFit                 String?
+  badgePhotoMatch          String?
+  badgeFabricFeel          String?
+  badgeComfortFeel         String?
+  badgeMaterialFeel        String?
+  badgeFinishDurability    String?
+  badgeShadeMatch          String?
+  badgeOverallSatisfaction String?
+  
+  createdAt                DateTime  @default(now())
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  productId String   @unique
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  addedAt   DateTime @default(now())
+}
