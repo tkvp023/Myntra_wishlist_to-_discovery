@@ -18,6 +18,91 @@ import {
   CreditCard
 } from 'lucide-react';
 
+const CATEGORY_FILTERS = [
+  {
+    id: 'all',
+    label: 'All Items',
+    icon: '✨',
+    matches: () => true
+  },
+  {
+    id: 'shirts',
+    label: 'Shirts',
+    icon: '👔',
+    matches: (p) => {
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return (sub.includes('shirt') && !sub.includes('t-shirt') && !sub.includes('tshirt')) ||
+             (name.includes('shirt') && !name.includes('t-shirt') && !name.includes('tshirt'));
+    }
+  },
+  {
+    id: 'pants',
+    label: 'Pants & Jeans',
+    icon: '👖',
+    matches: (p) => {
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return sub.includes('trouser') || sub.includes('pant') || sub.includes('jean') || sub.includes('jogger') ||
+             name.includes('trouser') || name.includes('pant') || name.includes('jean') || name.includes('jogger') || name.includes('trousers');
+    }
+  },
+  {
+    id: 'tshirts',
+    label: 'T-Shirts',
+    icon: '👕',
+    matches: (p) => {
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return sub.includes('t-shirt') || sub.includes('tshirt') || name.includes('t-shirt') || name.includes('tshirt') || name.includes('tee');
+    }
+  },
+  {
+    id: 'ethnic',
+    label: 'Ethnic & Dresses',
+    icon: '👗',
+    matches: (p) => {
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return sub.includes('ethnic') || sub.includes('kurta') || sub.includes('saree') || sub.includes('anarkali') || sub.includes('dress') || sub.includes('lehenga') ||
+             name.includes('kurta') || name.includes('saree') || name.includes('anarkali') || name.includes('dress') || name.includes('lehenga');
+    }
+  },
+  {
+    id: 'shoes',
+    label: 'Shoes',
+    icon: '👟',
+    matches: (p) => {
+      const cat = (p?.category || '').toLowerCase();
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return cat === 'footwear' || sub.includes('shoe') || sub.includes('sneaker') || sub.includes('running') || sub.includes('juttis') ||
+             name.includes('shoe') || name.includes('sneaker') || name.includes('running') || name.includes('juttis');
+    }
+  },
+  {
+    id: 'bags',
+    label: 'Bags',
+    icon: '👜',
+    matches: (p) => {
+      const cat = (p?.category || '').toLowerCase();
+      const sub = (p?.subcategory || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return cat === 'bags' || sub.includes('bag') || name.includes('bag') || name.includes('tote') || name.includes('backpack');
+    }
+  },
+  {
+    id: 'beauty',
+    label: 'Beauty & Care',
+    icon: '💄',
+    matches: (p) => {
+      const cat = (p?.category || '').toLowerCase();
+      const name = (p?.name || '').toLowerCase();
+      return ['beauty', 'makeup', 'skincare', 'fragrance', 'appliances'].includes(cat) || name.includes('perfume') || name.includes('lipstick') || name.includes('serum');
+    }
+  }
+];
+
 export default function WishlistPage() {
   const navigate = useNavigate();
   const { wishlistCount, removeFromWishlist, bagCount, wishlistTags } = useApp();
@@ -27,6 +112,7 @@ export default function WishlistPage() {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'collections' | 'outofstock'
   const [selectedTag, setSelectedTag] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const fetchWishlist = async () => {
     try {
@@ -65,13 +151,34 @@ export default function WishlistPage() {
     )
   );
 
-  // Filter items based on collection tag and out of stock tab
+  // Compute live match count for each category filter
+  const categoryCounts = CATEGORY_FILTERS.reduce((acc, cat) => {
+    if (cat.id === 'all') {
+      acc[cat.id] = wishlistItems.length;
+    } else {
+      acc[cat.id] = wishlistItems.filter((item) => cat.matches(item.product)).length;
+    }
+    return acc;
+  }, {});
+
+  // Filter items based on collection tag, subcategory filter, and out of stock tab
   const displayedItems = wishlistItems.filter((item) => {
     if (activeFilter === 'outofstock') return false;
+
+    // 1. Tag collection filter
     if (selectedTag !== 'all') {
       const itemTags = wishlistTags[item.product?.id] || [];
-      return itemTags.includes(selectedTag);
+      if (!itemTags.includes(selectedTag)) return false;
     }
+
+    // 2. Subcategory filter (Shirts, Pants, Shoes, etc.)
+    if (selectedCategory !== 'all') {
+      const categoryDef = CATEGORY_FILTERS.find((c) => c.id === selectedCategory);
+      if (categoryDef && !categoryDef.matches(item.product)) {
+        return false;
+      }
+    }
+
     return true;
   });
 
@@ -229,33 +336,77 @@ export default function WishlistPage() {
         ))}
       </div>
 
-      {/* 4. Subcategory Pills Scroll (Tshirts, Shirts, Shoes, Handbags) */}
-      <div className="flex items-center gap-3 px-3 py-2 bg-white border-b border-[#EAEAEC] overflow-x-auto no-scrollbar">
-        <div className="flex flex-col items-center min-w-[50px] cursor-pointer opacity-100">
-          <div className="w-11 h-11 rounded-full bg-[#FFF0F3] border-2 border-[#FF3F6C] flex items-center justify-center text-base">
-            👕
-          </div>
-          <span className="text-[10px] font-bold text-[#FF3F6C] mt-1 truncate">Tshirts</span>
-        </div>
-        <div className="flex flex-col items-center min-w-[50px] cursor-pointer opacity-80 hover:opacity-100">
-          <div className="w-11 h-11 rounded-full bg-[#F5F5F6] border border-[#D4D5D9] flex items-center justify-center text-base">
-            👔
-          </div>
-          <span className="text-[10px] font-semibold text-[#535766] mt-1 truncate">Shirts</span>
-        </div>
-        <div className="flex flex-col items-center min-w-[50px] cursor-pointer opacity-80 hover:opacity-100">
-          <div className="w-11 h-11 rounded-full bg-[#F5F5F6] border border-[#D4D5D9] flex items-center justify-center text-base">
-            👟
-          </div>
-          <span className="text-[10px] font-semibold text-[#535766] mt-1 truncate">Shoes</span>
-        </div>
-        <div className="flex flex-col items-center min-w-[50px] cursor-pointer opacity-80 hover:opacity-100">
-          <div className="w-11 h-11 rounded-full bg-[#F5F5F6] border border-[#D4D5D9] flex items-center justify-center text-base">
-            👜
-          </div>
-          <span className="text-[10px] font-semibold text-[#535766] mt-1 truncate">Bags</span>
-        </div>
+      {/* 4. Subcategory Pills Scroll (Shirts, Pants, T-Shirts, Shoes, Bags, Ethnic, Beauty) */}
+      <div className="flex items-center gap-2.5 px-3 py-2.5 bg-white border-b border-[#EAEAEC] overflow-x-auto no-scrollbar">
+        {CATEGORY_FILTERS.map((cat) => {
+          const isSelected = selectedCategory === cat.id;
+          const count = categoryCounts[cat.id] || 0;
+
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => setSelectedCategory(isSelected && cat.id !== 'all' ? 'all' : cat.id)}
+              className={`flex flex-col items-center min-w-[56px] p-1 rounded-xl transition-all cursor-pointer group ${
+                isSelected
+                  ? 'opacity-100 scale-105'
+                  : count === 0
+                  ? 'opacity-50 hover:opacity-80'
+                  : 'opacity-85 hover:opacity-100'
+              }`}
+            >
+              <div
+                className={`w-11 h-11 rounded-full flex items-center justify-center text-lg relative transition-all ${
+                  isSelected
+                    ? 'bg-[#FFF0F3] border-2 border-[#FF3F6C] shadow-xs'
+                    : 'bg-[#F5F5F6] border border-[#D4D5D9] group-hover:border-[#FF3F6C]/40 group-hover:bg-[#FFF5F7]'
+                }`}
+              >
+                <span>{cat.icon}</span>
+                {count > 0 && (
+                  <span
+                    className={`absolute -top-1 -right-1 text-[9px] font-extrabold px-1.5 py-0.2 rounded-full leading-tight shadow-2xs ${
+                      isSelected
+                        ? 'bg-[#FF3F6C] text-white'
+                        : 'bg-[#282C3F] text-white'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                )}
+              </div>
+              <span
+                className={`text-[10px] mt-1 text-center truncate max-w-[62px] ${
+                  isSelected
+                    ? 'font-black text-[#FF3F6C]'
+                    : 'font-semibold text-[#535766]'
+                }`}
+              >
+                {cat.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Active Category Filter Bar */}
+      {selectedCategory !== 'all' && (
+        <div className="mx-3 mt-2.5 px-3 py-1.5 bg-[#FFF0F3] border border-[#FF3F6C]/30 rounded-lg flex items-center justify-between text-xs animate-fade-in shadow-2xs">
+          <div className="flex items-center gap-1.5 text-[#FF3F6C] font-bold">
+            <span>Filtered:</span>
+            <span className="font-extrabold underline">
+              {CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.label} ({displayedItems.length})
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSelectedCategory('all')}
+            className="text-[11px] font-bold text-[#535766] hover:text-[#FF3F6C] cursor-pointer"
+          >
+            Clear Filter ✕
+          </button>
+        </div>
+      )}
 
       {/* 5. Promotional Cashback Banner */}
       <div className="mx-3 mt-3 bg-gradient-to-r from-[#9D174D] via-[#BE185D] to-[#E11D48] rounded-xl p-3 text-white flex items-center justify-between shadow-xs">
@@ -297,15 +448,30 @@ export default function WishlistPage() {
           </button>
         </div>
       ) : displayedItems.length === 0 ? (
-        /* No items in selected collection tag */
-        <div className="p-8 text-center bg-white my-3 mx-3 rounded-2xl border border-dashed border-[#D4D5D9]">
-          <span className="text-2xl block mb-1">🏷️</span>
-          <h3 className="text-xs font-black text-[#282C3F]">No items in "{selectedTag}"</h3>
-          <p className="text-[11px] text-[#535766] mt-1">Tap the 🏷️ Tag button on any wishlist item to add it to this collection.</p>
+        /* No items in selected collection tag or category filter */
+        <div className="p-8 text-center bg-white my-3 mx-3 rounded-2xl border border-dashed border-[#D4D5D9] animate-fade-in">
+          <span className="text-3xl block mb-2">
+            {selectedCategory !== 'all'
+              ? CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.icon || '🔍'
+              : '🏷️'}
+          </span>
+          <h3 className="text-xs font-black text-[#282C3F]">
+            {selectedCategory !== 'all'
+              ? `No ${CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.label} in your wishlist`
+              : `No items in "${selectedTag}"`}
+          </h3>
+          <p className="text-[11px] text-[#535766] mt-1 max-w-[240px] mx-auto">
+            {selectedCategory !== 'all'
+              ? `You have ${wishlistItems.length} other items in your wishlist.`
+              : 'Tap the 🏷️ Tag button on any wishlist item to add it to this collection.'}
+          </p>
           <button
             type="button"
-            onClick={() => setSelectedTag('all')}
-            className="mt-3 px-4 py-1.5 bg-[#FF3F6C] text-white text-xs font-bold rounded-lg cursor-pointer hover:bg-[#E0355E]"
+            onClick={() => {
+              setSelectedCategory('all');
+              setSelectedTag('all');
+            }}
+            className="mt-3.5 px-4 py-2 bg-[#FF3F6C] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-[#E0355E] shadow-2xs"
           >
             Show All Items ({wishlistItems.length})
           </button>
