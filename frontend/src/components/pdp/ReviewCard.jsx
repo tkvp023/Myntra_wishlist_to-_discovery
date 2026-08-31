@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, CheckCircle, Check, ThumbsUp, ShieldCheck, Ruler, Camera, Layers, Footprints, ShoppingBag, Gem, Palette, Heart } from 'lucide-react';
+import { Star, CheckCircle, Check, ThumbsUp, ShieldCheck, Ruler, Camera, Layers, Footprints, ShoppingBag, Gem, Palette, Heart, Sun } from 'lucide-react';
 import { BADGE_TYPES } from '../../utils/badgeConfig';
 
 /**
@@ -8,12 +8,12 @@ import { BADGE_TYPES } from '../../utils/badgeConfig';
  * Implements the exact review card design from pdp_reviews_dashboard/code.html:
  * - User name with verified green checkmark
  * - Size bought and date
- * - Star pill badge (top-right)
+ * - Star rating pill (top-right)
  * - Review text
- * - Customer photo thumbnails
+ * - Customer photo thumbnails with natural lighting indicator
  * - Bottom trust verification badges with checkmark
  */
-export default function ReviewCard({ review }) {
+export default function ReviewCard({ review, onPhotoClick }) {
   const [expanded, setExpanded] = useState(false);
   const [helpfulCount, setHelpfulCount] = useState(0);
   const [voted, setVoted] = useState(false);
@@ -62,6 +62,25 @@ export default function ReviewCard({ review }) {
     }
   };
 
+  const handleThumbnailClick = (imgUrl) => {
+    const photoObj = review.photoData || {
+      id: `rev_${review.id}`,
+      url: imgUrl,
+      user: review.userName || 'Verified Buyer',
+      size: review.sizeBought || 'M',
+      rating: review.rating || 5,
+      date: dateStr,
+      badge: '✓ Verified Buyer Photo',
+      lighting: 'Natural Daylight',
+      caption: review.text || ''
+    };
+    if (onPhotoClick) {
+      onPhotoClick(photoObj);
+    } else {
+      window.open(imgUrl, '_blank');
+    }
+  };
+
   return (
     <div className="p-3.5 bg-white rounded-xl border border-[#EAEAEC] flex flex-col gap-2.5 shadow-2xs">
       {/* 1. Top Header: User Name + Verified Check on Left; Star Rating Pill on Right (matching wireframe) */}
@@ -100,16 +119,23 @@ export default function ReviewCard({ review }) {
         </p>
       )}
 
-      {/* 3. Customer Photo Thumbnails (matching wireframe) */}
+      {/* 3. Customer Photo Thumbnails with Natural Light Tag */}
       {review.images && Array.isArray(review.images) && review.images.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
           {review.images.map((imgUrl, i) => (
             <div
               key={i}
-              className="w-16 h-16 rounded-lg overflow-hidden border border-[#EAEAEC] flex-shrink-0 cursor-pointer shadow-2xs hover:opacity-90 transition-opacity"
-              onClick={() => window.open(imgUrl, '_blank')}
+              className="relative w-16 h-20 rounded-lg overflow-hidden border border-[#EAEAEC] flex-shrink-0 cursor-pointer shadow-2xs hover:border-[#03A685] transition-all group"
+              onClick={() => handleThumbnailClick(imgUrl)}
             >
-              <img src={imgUrl} alt={`Customer review photo ${i + 1}`} className="w-full h-full object-cover" />
+              <img
+                src={imgUrl}
+                alt={`Customer review photo ${i + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute top-1 right-1 bg-[#03A685] text-white p-0.5 rounded-full shadow-xs">
+                <Sun className="w-2 h-2" />
+              </div>
             </div>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { api } from '../api/client';
 import { useApp } from '../context/AppContext';
 import WishlistCard from '../components/wishlist/WishlistCard';
 import ReengagementCard from '../components/wishlist/ReengagementCard';
+import CollectionsView from '../components/wishlist/CollectionsView';
 import {
   Heart,
   ShoppingBag,
@@ -110,9 +111,9 @@ export default function WishlistPage() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'collections' | 'outofstock'
-  const [selectedTag, setSelectedTag] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'outofstock'
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showCollections, setShowCollections] = useState(false);
 
   const fetchWishlist = async () => {
     try {
@@ -161,17 +162,11 @@ export default function WishlistPage() {
     return acc;
   }, {});
 
-  // Filter items based on collection tag, subcategory filter, and out of stock tab
+  // Filter items based on subcategory filter and out of stock tab
   const displayedItems = wishlistItems.filter((item) => {
     if (activeFilter === 'outofstock') return false;
 
-    // 1. Tag collection filter
-    if (selectedTag !== 'all') {
-      const itemTags = wishlistTags[item.product?.id] || [];
-      if (!itemTags.includes(selectedTag)) return false;
-    }
-
-    // 2. Subcategory filter (Shirts, Pants, Shoes, etc.)
+    // Subcategory filter (Shirts, Pants, Shoes, etc.)
     if (selectedCategory !== 'all') {
       const categoryDef = CATEGORY_FILTERS.find((c) => c.id === selectedCategory);
       if (categoryDef && !categoryDef.matches(item.product)) {
@@ -213,7 +208,7 @@ export default function WishlistPage() {
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-[#F5F5F6] pb-16 select-none">
+    <div className="flex-1 flex flex-col bg-[#F5F5F6] pb-16 select-none relative min-h-full">
       
       {/* 1. Header Bar (matching attached Myntra screenshot: Back, Wishlist X items, Edit, Bag) */}
       <div className="bg-white px-3 py-2.5 border-b border-[#EAEAEC] sticky top-0 z-20 flex items-center justify-between shadow-2xs">
@@ -261,7 +256,7 @@ export default function WishlistPage() {
         <div className="flex items-center gap-2 min-w-0">
           <MapPin className="w-3.5 h-3.5 text-[#9333EA] flex-shrink-0" />
           <span className="text-[11px] text-[#282C3F] truncate font-semibold">
-            <strong>BBCL Vajra</strong> - Service Rd, Nolambur, Ambattur...
+            <strong>Prestige Towers</strong> - 4th Block, Koramangala...
           </span>
         </div>
         <ChevronDown className="w-3.5 h-3.5 text-[#535766] flex-shrink-0" />
@@ -271,29 +266,17 @@ export default function WishlistPage() {
       <div id="wishlist-tags-section" className="flex items-center gap-2 px-3 pt-2.5 pb-1.5 bg-white border-b border-[#F5F5F6]">
         <button
           type="button"
-          onClick={() => {
-            if (activeFilter === 'collections') {
-              setActiveFilter('all');
-              setSelectedTag('all');
-            } else {
-              setActiveFilter('collections');
-            }
-          }}
-          className={`flex-1 py-1.5 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-            activeFilter === 'collections' || selectedTag !== 'all'
-              ? 'border-[#FF3F6C] bg-[#FFF0F3] text-[#FF3F6C]'
-              : 'border-[#D4D5D9] text-[#282C3F] hover:bg-[#F5F5F6]'
-          }`}
+          onClick={() => setShowCollections(true)}
+          className="flex-1 py-1.5 px-3 rounded-lg border border-[#D4D5D9] text-[#282C3F] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:bg-[#F5F5F6]"
         >
           <Layers className="w-3.5 h-3.5 text-[#535766]" />
-          <span>Collections {allAvailableTags.length > 0 ? `(${allAvailableTags.length})` : ''}</span>
+          <span>Collections</span>
         </button>
 
         <button
           type="button"
           onClick={() => {
             setActiveFilter(activeFilter === 'outofstock' ? 'all' : 'outofstock');
-            setSelectedTag('all');
           }}
           className={`flex-1 py-1.5 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
             activeFilter === 'outofstock'
@@ -306,38 +289,8 @@ export default function WishlistPage() {
         </button>
       </div>
 
-      {/* 3.1 Dynamic Custom Collection Intent Tags Scroll Bar */}
-      <div className="px-3 py-2 bg-[#FAFAFB] border-b border-[#EAEAEC] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        <button
-          type="button"
-          onClick={() => setSelectedTag('all')}
-          className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-            selectedTag === 'all'
-              ? 'bg-[#282C3F] text-white shadow-xs'
-              : 'bg-white text-[#535766] border border-[#D4D5D9] hover:border-[#282C3F]'
-          }`}
-        >
-          All Items ({wishlistItems.length})
-        </button>
-
-        {allAvailableTags.map((tag, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => setSelectedTag(selectedTag === tag ? 'all' : tag)}
-            className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1 ${
-              selectedTag === tag
-                ? 'bg-[#FF3F6C] text-white border border-[#FF3F6C] shadow-2xs'
-                : 'bg-white text-[#282C3F] border border-[#D4D5D9] hover:border-[#FF3F6C]'
-            }`}
-          >
-            <span>{tag}</span>
-          </button>
-        ))}
-      </div>
-
       {/* 4. Subcategory Pills Scroll (Shirts, Pants, T-Shirts, Shoes, Bags, Ethnic, Beauty) */}
-      <div className="flex items-center gap-2.5 px-3 py-2.5 bg-white border-b border-[#EAEAEC] overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-2.5 px-3 py-2.5 bg-white border-b border-[#EAEAEC] overflow-x-auto no-scrollbar flex-shrink-0">
         {CATEGORY_FILTERS.map((cat) => {
           const isSelected = selectedCategory === cat.id;
           const count = categoryCounts[cat.id] || 0;
@@ -347,7 +300,7 @@ export default function WishlistPage() {
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategory(isSelected && cat.id !== 'all' ? 'all' : cat.id)}
-              className={`flex flex-col items-center min-w-[56px] p-1 rounded-xl transition-all cursor-pointer group ${
+              className={`flex flex-col items-center min-w-[56px] flex-shrink-0 p-1 rounded-xl transition-all cursor-pointer group ${
                 isSelected
                   ? 'opacity-100 scale-105'
                   : count === 0
@@ -356,7 +309,7 @@ export default function WishlistPage() {
               }`}
             >
               <div
-                className={`w-11 h-11 rounded-full flex items-center justify-center text-lg relative transition-all ${
+                className={`w-11 h-11 rounded-full flex items-center justify-center text-lg relative transition-all flex-shrink-0 ${
                   isSelected
                     ? 'bg-[#FFF0F3] border-2 border-[#FF3F6C] shadow-xs'
                     : 'bg-[#F5F5F6] border border-[#D4D5D9] group-hover:border-[#FF3F6C]/40 group-hover:bg-[#FFF5F7]'
@@ -376,7 +329,7 @@ export default function WishlistPage() {
                 )}
               </div>
               <span
-                className={`text-[10px] mt-1 text-center truncate max-w-[62px] ${
+                className={`text-[10px] mt-1 text-center truncate max-w-[62px] block ${
                   isSelected
                     ? 'font-black text-[#FF3F6C]'
                     : 'font-semibold text-[#535766]'
@@ -448,29 +401,20 @@ export default function WishlistPage() {
           </button>
         </div>
       ) : displayedItems.length === 0 ? (
-        /* No items in selected collection tag or category filter */
+        /* No items in selected category filter */
         <div className="p-8 text-center bg-white my-3 mx-3 rounded-2xl border border-dashed border-[#D4D5D9] animate-fade-in">
           <span className="text-3xl block mb-2">
-            {selectedCategory !== 'all'
-              ? CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.icon || '🔍'
-              : '🏷️'}
+            {CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.icon || '🔍'}
           </span>
           <h3 className="text-xs font-black text-[#282C3F]">
-            {selectedCategory !== 'all'
-              ? `No ${CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.label} in your wishlist`
-              : `No items in "${selectedTag}"`}
+            No {CATEGORY_FILTERS.find((c) => c.id === selectedCategory)?.label} in your wishlist
           </h3>
           <p className="text-[11px] text-[#535766] mt-1 max-w-[240px] mx-auto">
-            {selectedCategory !== 'all'
-              ? `You have ${wishlistItems.length} other items in your wishlist.`
-              : 'Tap the 🏷️ Tag button on any wishlist item to add it to this collection.'}
+            You have {wishlistItems.length} other items in your wishlist.
           </p>
           <button
             type="button"
-            onClick={() => {
-              setSelectedCategory('all');
-              setSelectedTag('all');
-            }}
+            onClick={() => setSelectedCategory('all')}
             className="mt-3.5 px-4 py-2 bg-[#FF3F6C] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-[#E0355E] shadow-2xs"
           >
             Show All Items ({wishlistItems.length})
@@ -479,7 +423,7 @@ export default function WishlistPage() {
       ) : (
         <div className="p-3 space-y-3.5">
           {/* 6. Stalled Intent Re-Engagement Cards Section (Part C) */}
-          {reengagementItems.length > 0 && selectedTag === 'all' && (
+          {reengagementItems.length > 0 && (
             <div className="space-y-2">
               {reengagementItems.slice(0, 1).map((item) => (
                 <ReengagementCard key={item.id} item={item} />
@@ -488,7 +432,7 @@ export default function WishlistPage() {
           )}
 
           {/* 7. Wishlist Grid */}
-          <div className="grid grid-cols-2 gap-2.5">
+          <div id="wishlist-grid-section" className="grid grid-cols-2 gap-2.5">
             {displayedItems.map((item, index) => (
               <WishlistCard
                 key={item.id}
@@ -509,6 +453,14 @@ export default function WishlistPage() {
             </p>
           </div>
         </div>
+      )}
+
+      {/* Collections Full-Screen View */}
+      {showCollections && (
+        <CollectionsView
+          onClose={() => setShowCollections(false)}
+          wishlistItems={wishlistItems}
+        />
       )}
     </div>
   );

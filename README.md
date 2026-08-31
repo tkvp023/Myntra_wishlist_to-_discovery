@@ -19,6 +19,8 @@ All design decisions, edge cases, and API specifications are neatly organized in
 | Document | Purpose |
 |---|---|
 | [**DOCS/COMPLETE_SOLUTION_EXPLANATION.md**](DOCS/COMPLETE_SOLUTION_EXPLANATION.md) | **Master End-to-End Solution & Technical Architecture Document** |
+| [**DOCS/HIGH_LEVEL_SYSTEM_DESIGN.md**](DOCS/HIGH_LEVEL_SYSTEM_DESIGN.md) | **High-Level System Design (HLD) & Closed-Loop Flywheel Architecture** |
+| [**DOCS/MYNTRA_PRODUCTION_SYSTEM_DESIGN.md**](DOCS/MYNTRA_PRODUCTION_SYSTEM_DESIGN.md) | **Enterprise Production System Design (LLD) & Microservices Topology** |
 | [**DOCS/WALKTHROUGH_GUIDE_updated.md**](DOCS/WALKTHROUGH_GUIDE_updated.md) | **Official 7-Step Interactive Walkthrough Guide & Architectural Rules** |
 | [**DOCS/newproblemstatement.md**](DOCS/newproblemstatement.md) | Problem statement, user journeys, badge taxonomy, and core hypotheses |
 | [**DOCS/architecture.md**](DOCS/architecture.md) | System architecture, ERD, and component diagrams |

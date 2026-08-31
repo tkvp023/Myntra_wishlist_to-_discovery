@@ -398,7 +398,7 @@ DELETE /api/wishlist/:productId          → Remove from wishlist
 ```json
 {
   "id": "clx2def...",
-  "userName": "Pallela Tharun Venkat",
+  "userName": "Aarav Sharma",
   "rating": 5,
   "text": "Great quality shirt, fabric feels exactly as described...",
   "sizeBought": "40",

@@ -1,149 +1,57 @@
 import React, { useState } from 'react';
-import { Star, X, CheckCircle, ShieldCheck, Sun, Sparkles, ChevronLeft, ChevronRight, User } from 'lucide-react';
-import { getProductImageUrl } from '../../utils/imageHelper';
+import { Star, X, CheckCircle, Sun, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getProductUgcPhotos } from '../../utils/ugcPhotosHelper';
 
-// Curated customer UGC photos mapped by category for rich initial experience
-const SAMPLE_CUSTOMER_PHOTOS = {
-  clothing: [
-    {
-      id: 'ugc_1',
-      url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop&q=80',
-      user: 'Rahul S.',
-      size: 'L',
-      rating: 5,
-      date: '24 Aug 2026',
-      badge: 'Photo Match 100%',
-      lighting: 'Outdoor Natural Daylight',
-      caption: 'The Navy blue shade is identical to the studio picture. Fabric is super soft cotton, fits true to size!'
-    },
-    {
-      id: 'ugc_2',
-      url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
-      user: 'Arun K.',
-      size: 'M',
-      rating: 5,
-      date: '18 Aug 2026',
-      badge: 'Feels 100% Genuine',
-      lighting: 'Indoor Room Lighting',
-      caption: 'Stitching and collar durability is top notch. Washed twice with zero color bleed.'
-    },
-    {
-      id: 'ugc_3',
-      url: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&auto=format&fit=crop&q=80',
-      user: 'Vikram M.',
-      size: 'XL',
-      rating: 4,
-      date: '12 Aug 2026',
-      badge: '85% Fits as Expected',
-      lighting: 'Diffused Sunlight',
-      caption: 'Length is just right, slightly slim on the chest if you have broad shoulders.'
-    },
-    {
-      id: 'ugc_4',
-      url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=80',
-      user: 'Priya N.',
-      size: 'S',
-      rating: 5,
-      date: '08 Aug 2026',
-      badge: 'Pure Fabric Feel',
-      lighting: 'Golden Hour Lighting',
-      caption: 'Super breathable and looks very stylish in real daylight. Highly recommended!'
-    }
-  ],
-  footwear: [
-    {
-      id: 'ugc_f1',
-      url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
-      user: 'Aditya R.',
-      size: 'UK 9',
-      rating: 5,
-      date: '20 Aug 2026',
-      badge: 'True to Size',
-      lighting: 'Natural Sunlight',
-      caption: 'Sole grip and cushion comfort are insane. Looks even cleaner in person than studio shot.'
-    },
-    {
-      id: 'ugc_f2',
-      url: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&auto=format&fit=crop&q=80',
-      user: 'Karthik P.',
-      size: 'UK 8',
-      rating: 4,
-      date: '15 Aug 2026',
-      badge: '100% Genuine Box',
-      lighting: 'Indoor Daylight',
-      caption: 'Original verified barcode tag included. Very lightweight for daily gym and jogging.'
-    }
-  ],
-  default: [
-    {
-      id: 'ugc_d1',
-      url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=80',
-      user: 'Sneha B.',
-      size: 'Standard',
-      rating: 5,
-      date: '22 Aug 2026',
-      badge: 'Authentic Finish',
-      lighting: 'Direct Daylight',
-      caption: 'Packaging was sealed with trust tag intact. Product texture exactly matches description.'
-    },
-    {
-      id: 'ugc_d2',
-      url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop&q=80',
-      user: 'Ananya S.',
-      size: 'One Size',
-      rating: 5,
-      date: '10 Aug 2026',
-      badge: 'Color Accurate',
-      lighting: 'Natural Room Light',
-      caption: 'Zippers and inner lining feel very premium and sturdy.'
-    }
-  ]
-};
-
-export default function CustomerPhotoGallery({ product, reviews = [] }) {
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+export default function CustomerPhotoGallery({
+  product,
+  reviews = [],
+  selectedPhoto: externalSelectedPhoto,
+  onSelectPhoto,
+  onClosePhoto
+}) {
+  const [internalSelectedPhoto, setInternalSelectedPhoto] = useState(null);
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  // Extract photos from user-submitted reviews if available, else use curated category UGC photos
-  const reviewPhotos = reviews.flatMap((r) => {
-    if (r.images && Array.isArray(r.images)) {
-      return r.images.map((img, i) => ({
-        id: `${r.id}_${i}`,
-        url: img,
-        user: r.userName || 'Verified Buyer',
-        size: r.sizeBought || 'M',
-        rating: r.rating || 5,
-        date: 'Recent Review',
-        badge: 'Verified Buyer Photo',
-        lighting: 'Natural Daylight',
-        caption: r.text || 'Real customer photo review'
-      }));
-    }
-    return [];
-  });
+  const selectedPhoto = externalSelectedPhoto !== undefined ? externalSelectedPhoto : internalSelectedPhoto;
 
-  const categoryPhotos = SAMPLE_CUSTOMER_PHOTOS[product?.category] || SAMPLE_CUSTOMER_PHOTOS.default;
-  const allPhotos = [...reviewPhotos, ...categoryPhotos];
+  // Get curated product-relevant customer UGC photos
+  const allPhotos = getProductUgcPhotos(product);
 
-  if (allPhotos.length === 0) return null;
+  if (!allPhotos || allPhotos.length === 0) return null;
 
   const handleOpenLightbox = (photo, index) => {
-    setSelectedPhoto(photo);
     setPhotoIndex(index);
+    if (onSelectPhoto) {
+      onSelectPhoto(photo);
+    } else {
+      setInternalSelectedPhoto(photo);
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    if (onClosePhoto) {
+      onClosePhoto();
+    } else {
+      setInternalSelectedPhoto(null);
+    }
   };
 
   const handlePrev = (e) => {
     e.stopPropagation();
     const nextIdx = (photoIndex - 1 + allPhotos.length) % allPhotos.length;
     setPhotoIndex(nextIdx);
-    setSelectedPhoto(allPhotos[nextIdx]);
+    const nextPhoto = allPhotos[nextIdx];
+    if (onSelectPhoto) onSelectPhoto(nextPhoto);
+    else setInternalSelectedPhoto(nextPhoto);
   };
 
   const handleNext = (e) => {
     e.stopPropagation();
     const nextIdx = (photoIndex + 1) % allPhotos.length;
     setPhotoIndex(nextIdx);
-    setSelectedPhoto(allPhotos[nextIdx]);
+    const nextPhoto = allPhotos[nextIdx];
+    if (onSelectPhoto) onSelectPhoto(nextPhoto);
+    else setInternalSelectedPhoto(nextPhoto);
   };
 
   return (
@@ -194,7 +102,7 @@ export default function CustomerPhotoGallery({ product, reviews = [] }) {
       {/* LIGHTBOX MODAL */}
       {selectedPhoto && (
         <div
-          onClick={() => setSelectedPhoto(null)}
+          onClick={handleCloseLightbox}
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex flex-col justify-between p-4 animate-in fade-in duration-200 select-none"
         >
           {/* Top Bar */}
@@ -208,7 +116,7 @@ export default function CustomerPhotoGallery({ product, reviews = [] }) {
               </span>
             </div>
             <button
-              onClick={() => setSelectedPhoto(null)}
+              onClick={handleCloseLightbox}
               className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white cursor-pointer transition-colors"
             >
               <X className="w-5 h-5" />

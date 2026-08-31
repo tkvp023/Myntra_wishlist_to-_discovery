@@ -4,10 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { getProductImageUrl } from '../../utils/imageHelper';
 
 const PRESET_TAGS = [
-  '🎁 Gift Idea',
-  '✨ Aspirational',
   '⚖️ Price Comparison',
-  '💼 Workwear',
   '🏖️ Vacation',
   '🎉 Festive / Party',
   '🎯 Must-Have'

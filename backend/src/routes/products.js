@@ -1,9 +1,8 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const { computeBadgeAggregates, formatProduct } = require('../utils/badgeHelper');
+const prisma = require('../prisma');
+const { computeBadgeAggregates, formatProduct, safeJsonParse } = require('../utils/badgeHelper');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // GET /api/products — list all products with optional ?category=, ?subcategory=, and ?gender= filter
 router.get('/', async (req, res, next) => {
@@ -13,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
     // 1. Gender / Division filtering
     if (gender && gender !== 'all') {
-      const g = gender.toLowerCase();
+      const g = String(gender).toLowerCase().slice(0, 30);
       if (g === 'beauty') {
         where.category = { in: ['makeup', 'skincare', 'fragrance', 'appliances'] };
       } else if (g === 'men') {
@@ -27,7 +26,7 @@ router.get('/', async (req, res, next) => {
 
     // 2. Specific Category filtering
     if (category && category !== 'all') {
-      const c = category.toLowerCase();
+      const c = String(category).toLowerCase().slice(0, 30);
       if (c === 'beauty') {
         where.category = { in: ['makeup', 'skincare', 'fragrance', 'appliances'] };
       } else if (c === 'men') {
@@ -43,7 +42,7 @@ router.get('/', async (req, res, next) => {
 
     // 3. Subcategory filtering (Sarees, Lehengas, Kurtis, T-Shirts, Trousers, etc.)
     if (subcategory && subcategory !== 'all') {
-      const sub = subcategory.toLowerCase();
+      const sub = String(subcategory).toLowerCase().slice(0, 40);
       if (sub === 'sarees' || sub === 'saree') {
         where.subcategory = 'Sarees';
       } else if (sub === 'lehenga' || sub === 'lehengas' || sub === 'lehenga choli') {
@@ -87,12 +86,10 @@ router.get('/', async (req, res, next) => {
     });
 
     const formatted = products.map((p) => {
-      const applicable = typeof p.applicableBadges === 'string' 
-        ? JSON.parse(p.applicableBadges) 
-        : p.applicableBadges;
+      const applicable = safeJsonParse(p.applicableBadges, []);
       const aggregates = computeBadgeAggregates(p.reviews, applicable);
       
-      // Calculate top badge summary for product card (Section 8: Homepage = 1 stat, positive-only)
+      // Calculate top badge summary for product card
       let badgeSummary = null;
       if (aggregates.authenticity && !aggregates.authenticity.belowThreshold) {
         badgeSummary = `${aggregates.authenticity.percentPositive}% Feels Genuine`;
@@ -123,8 +120,10 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
+    const sanitizedId = String(id).slice(0, 50);
+
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: sanitizedId },
       include: {
         reviews: {
           orderBy: { createdAt: 'desc' },
@@ -138,13 +137,10 @@ router.get('/:id', async (req, res, next) => {
     }
 
     const allProductReviews = await prisma.review.findMany({
-      where: { productId: id }
+      where: { productId: sanitizedId }
     });
 
-    const applicable = typeof product.applicableBadges === 'string'
-      ? JSON.parse(product.applicableBadges)
-      : product.applicableBadges;
-
+    const applicable = safeJsonParse(product.applicableBadges, []);
     const badgeAggregates = computeBadgeAggregates(allProductReviews, applicable);
 
     // Compute live average rating and reviewCount
@@ -172,8 +168,10 @@ router.get('/:id', async (req, res, next) => {
 router.get('/:id/badge-aggregates', async (req, res, next) => {
   try {
     const { id } = req.params;
+    const sanitizedId = String(id).slice(0, 50);
+
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: sanitizedId },
       select: { applicableBadges: true }
     });
 
@@ -182,13 +180,10 @@ router.get('/:id/badge-aggregates', async (req, res, next) => {
     }
 
     const reviews = await prisma.review.findMany({
-      where: { productId: id }
+      where: { productId: sanitizedId }
     });
 
-    const applicable = typeof product.applicableBadges === 'string'
-      ? JSON.parse(product.applicableBadges)
-      : product.applicableBadges;
-
+    const applicable = safeJsonParse(product.applicableBadges, []);
     const aggregates = computeBadgeAggregates(reviews, applicable);
     res.json(aggregates);
   } catch (err) {

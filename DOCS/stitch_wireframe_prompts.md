@@ -43,7 +43,7 @@ Generate the following 5 screens in sequence:
   * Card 3: Ruler icon, "85%", "Fits as Expected".
   * Card 4: Fabric grid icon, "78%", "Fabric As Described".
 - Review Filter Chips (Horizontal scroll): "All (144)", "Photo Match ✓", "Authenticity ✓", "Fit ✓", "Fabric Feel ✓", "5 ★", "4 ★", and a toggle switch for "Disagree Only".
-- Customer Review Cards: Showing user name with green verified checkmark ("Pallela Tharun ✓"), green star pill ("5 ★"), "Size: 39", date, comment text, customer uploaded photo thumbnail, and INLINE TRUST BADGE PILLS (pink pill: "✓ Matches Photos", green pill: "✓ Feels Genuine").
+- Customer Review Cards: Showing user name with green verified checkmark ("Aarav Sharma ✓"), green star pill ("5 ★"), "Size: 39", date, comment text, customer uploaded photo thumbnail, and INLINE TRUST BADGE PILLS (pink pill: "✓ Matches Photos", green pill: "✓ Feels Genuine").
 - Prominent Pink Outline Button: "WRITE A REVIEW".
 
 4. REVIEW SUBMISSION MODAL / SCREEN (PART A):
@@ -108,7 +108,7 @@ Trust-Verified Aggregates Carousel: 4 horizontal scrollable cards:
 - Card 3: Ruler icon, "85%", "Fits as Expected" (pink highlight)
 - Card 4: Fabric grid icon, "78%", "Fabric As Described"
 Filter Chips Bar: Horizontal scrollable pills ["All (144)", "Photo Match ✓", "Authenticity ✓", "Fit ✓", "Fabric Feel", "5★", "4★"] + toggle switch for "Disagree Only".
-Review Card: Reviewer "Pallela Tharun Venkat ✓" with 5★ green pill, size tag "Size: 39", date, review text, customer photo thumbnail, and trust badge tags ("✓ Matches Photos", "✓ Feels Genuine").
+Review Card: Reviewer "Aarav Sharma ✓" with 5★ green pill, size tag "Size: 39", date, review text, customer photo thumbnail, and trust badge tags ("✓ Matches Photos", "✓ Feels Genuine").
 Bottom CTA: Pink outlined button "WRITE A REVIEW".
 ```
 

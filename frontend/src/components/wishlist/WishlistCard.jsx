@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, ShoppingBag, Star, Sparkles, ShieldCheck, Share2, BarChart2, ChevronDown, ChevronUp, Check, Tag } from 'lucide-react';
+import { Trash2, ShoppingBag, Star, Sparkles, ShieldCheck, Share2, BarChart2, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { getProductImageUrl } from '../../utils/imageHelper';
 import { useApp } from '../../context/AppContext';
 import TagItemModal from './TagItemModal';
@@ -70,12 +70,51 @@ export default function WishlistCard({ item, index, onRemove }) {
 
   const discountVal = Math.max(0, product.mrp - product.finalPrice);
 
+  // Long press timer for adding items to collections
+  const timerRef = useRef(null);
+  const isLongPressRef = useRef(false);
+
+  const startPress = () => {
+    isLongPressRef.current = false;
+    timerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      setIsTagModalOpen(true);
+      showToast('Organize into Collections');
+      if (navigator.vibrate) {
+        navigator.vibrate(40);
+      }
+    }, 500);
+  };
+
+  const endPress = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handleCardClick = (e) => {
+    if (isLongPressRef.current) {
+      isLongPressRef.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    handleProductClick();
+  };
+
   return (
     <div className="group flex flex-col bg-white border border-[#EAEAEC] rounded-xl overflow-hidden shadow-2xs hover:shadow-md transition-all select-none relative">
       
-      {/* 1. Product Picture (Clicking goes to Product Page) */}
+      {/* 1. Product Picture (Clicking goes to Product Page, Long Press adds to Collections) */}
       <div
-        onClick={handleProductClick}
+        onClick={handleCardClick}
+        onMouseDown={startPress}
+        onMouseUp={endPress}
+        onMouseLeave={endPress}
+        onTouchStart={startPress}
+        onTouchEnd={endPress}
+        onTouchCancel={endPress}
         className="relative w-full pb-[133%] bg-[#F5F5F6] overflow-hidden cursor-pointer"
       >
         <img
@@ -118,9 +157,18 @@ export default function WishlistCard({ item, index, onRemove }) {
         </button>
       </div>
 
-      {/* 2. Product Details Block (Clicking text goes to Product Page) */}
+      {/* 2. Product Details Block (Clicking text goes to Product Page, Long Press adds to Collections) */}
       <div className="p-2.5 flex flex-col flex-1 justify-between bg-white">
-        <div onClick={handleProductClick} className="cursor-pointer">
+        <div
+          onClick={handleCardClick}
+          onMouseDown={startPress}
+          onMouseUp={endPress}
+          onMouseLeave={endPress}
+          onTouchStart={startPress}
+          onTouchEnd={endPress}
+          onTouchCancel={endPress}
+          className="cursor-pointer"
+        >
           <h3 className="text-xs font-black text-[#282C3F] uppercase tracking-wide truncate group-hover:text-[#FF3F6C] transition-colors">
             {product.brand}
           </h3>
@@ -149,37 +197,10 @@ export default function WishlistCard({ item, index, onRemove }) {
             )}
           </div>
 
-          {/* Delivery Tag & Custom Collection Tags */}
+          {/* Delivery Tag */}
           <div className="flex items-center gap-1 text-[9px] text-[#535766] mt-1 flex-wrap">
             <span>Delivery by <strong className="text-[#282C3F]">Tomorrow</strong></span>
             <span className="text-[#FF3F6C] font-extrabold text-[8px] bg-[#FFF0F3] px-1 rounded">EXPRESS</span>
-          </div>
-
-          {/* Active Collection Tag Badges (Tap to manage) */}
-          <div className="flex items-center gap-1 mt-1.5 flex-wrap">
-            {currentTags.map((tag, idx) => (
-              <span
-                key={idx}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsTagModalOpen(true);
-                }}
-                className="inline-flex items-center gap-0.5 text-[8.5px] font-bold bg-[#FFF0F3] text-[#FF3F6C] border border-[#FF3F6C]/30 px-1.5 py-0.5 rounded-full cursor-pointer hover:bg-[#FFE0E6] transition-colors"
-              >
-                <span>{tag}</span>
-              </span>
-            ))}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsTagModalOpen(true);
-              }}
-              className="text-[8.5px] font-bold text-[#535766] hover:text-[#FF3F6C] flex items-center gap-0.5 px-1 py-0.5 rounded border border-dashed border-[#D4D5D9] hover:border-[#FF3F6C] cursor-pointer"
-            >
-              <Tag className="w-2.5 h-2.5" />
-              <span>{currentTags.length === 0 ? '+ Tag' : '+'}</span>
-            </button>
           </div>
         </div>
 
@@ -257,7 +278,7 @@ export default function WishlistCard({ item, index, onRemove }) {
           )}
         </div>
 
-        {/* 4. Bottom Action Icons (Delete, Tag/Organize, Toggle Stats, Share) */}
+        {/* 4. Bottom Action Icons (Delete, Toggle Stats, Share) */}
         <div className="mt-2.5 pt-2 border-t border-[#EAEAEC] flex items-center justify-around text-[#94969F]">
           {/* Action 1: Delete from Wishlist */}
           <button
@@ -274,24 +295,7 @@ export default function WishlistCard({ item, index, onRemove }) {
 
           <span className="h-3 w-px bg-[#EAEAEC]"></span>
 
-          {/* Action 2: Tag & Organize */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsTagModalOpen(true);
-            }}
-            aria-label="Tag item"
-            className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-              currentTags.length > 0 ? 'text-[#FF3F6C] bg-[#FFF0F3]' : 'hover:text-[#FF3F6C] hover:bg-[#F5F5F6]'
-            }`}
-          >
-            <Tag className="w-3.5 h-3.5" />
-          </button>
-
-          <span className="h-3 w-px bg-[#EAEAEC]"></span>
-
-          {/* Action 3: Stats Toggle / Inspector */}
+          {/* Action 2: Stats Toggle / Inspector */}
           <button
             type="button"
             onClick={handleToggleStats}
@@ -305,7 +309,7 @@ export default function WishlistCard({ item, index, onRemove }) {
 
           <span className="h-3 w-px bg-[#EAEAEC]"></span>
 
-          {/* Action 4: Share */}
+          {/* Action 3: Share */}
           <button
             type="button"
             onClick={handleShare}
@@ -317,30 +321,7 @@ export default function WishlistCard({ item, index, onRemove }) {
         </div>
       </div>
 
-      {/* 5. DEDICATED FULL-WIDTH "ADD TO BAG" BOTTOM BAR */}
-      <button
-        type="button"
-        onClick={handleAddToBag}
-        className={`w-full py-2 px-3 border-t text-[11px] font-black tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
-          isAddedToBag
-            ? 'bg-[#E8F8F5] text-[#14958F] border-[#14958F]/30'
-            : 'bg-white hover:bg-[#FFF0F3] text-[#FF3F6C] hover:text-[#E72744] border-[#EAEAEC]'
-        }`}
-      >
-        {isAddedToBag ? (
-          <>
-            <Check className="w-3.5 h-3.5 stroke-[3] text-[#14958F]" />
-            <span>ADDED TO BAG</span>
-          </>
-        ) : (
-          <>
-            <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>ADD TO BAG</span>
-          </>
-        )}
-      </button>
-
-      {/* 6. Tag Management Modal */}
+      {/* Tag Management Modal */}
       <TagItemModal
         product={product}
         isOpen={isTagModalOpen}

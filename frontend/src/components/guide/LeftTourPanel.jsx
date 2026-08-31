@@ -26,12 +26,12 @@ export default function LeftTourPanel() {
   } = useGuide();
 
   const QUICK_JUMPS = [
-    { label: 'Push Notification', step: 0, icon: Bell, route: '/' },
+    { label: 'Push Alert', step: 0, icon: Bell, route: '/' },
     { label: 'Homepage Shelf', step: 1, icon: Home, route: '/' },
-    { label: 'Search Tile Markers', step: 2, icon: Search, route: '/' },
-    { label: 'Wishlist & Tags', step: 3, icon: Heart, route: '/wishlist' },
-    { label: 'PDP Trust Dashboard', step: 4, icon: Shirt, route: '/product/prod_1' },
-    { label: 'Review Badge Filters', step: 5, icon: Filter, route: '/product/prod_1' },
+    { label: 'Search Markers', step: 2, icon: Search, route: '/' },
+    { label: 'Wishlist Ratings', step: 3, icon: Heart, route: '/wishlist' },
+    { label: 'Trust Dashboard', step: 4, icon: Shirt, route: '/product/prod_1' },
+    { label: 'Review Filters', step: 5, icon: Filter, route: '/product/prod_1' },
     { label: 'Review Submission', step: 6, icon: Star, route: '/profile' }
   ];
 

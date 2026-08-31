@@ -182,7 +182,7 @@ export default function ProfilePage() {
         <div className="flex items-center gap-3.5">
           <div className="relative">
             <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#FF3F6C] to-[#FF905A] flex items-center justify-center text-white font-black text-xl shadow-xs">
-              T
+              A
             </div>
             <div className="absolute -bottom-1 -right-1 bg-[#03A685] text-white p-0.5 rounded-full border-2 border-white">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -192,14 +192,14 @@ export default function ProfilePage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-black text-[#282C3F] truncate">
-                Tharun Kumar
+                Aarav Sharma
               </h2>
               <span className="text-[9px] font-extrabold bg-[#03A685]/15 text-[#047857] px-1.5 py-0.5 rounded border border-[#03A685]/30">
                 Verified Buyer
               </span>
             </div>
             <p className="text-xs text-[#535766] truncate mt-0.5">
-              tharun.verified@myntra.user
+              aarav.sharma@myntra.user
             </p>
             <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#94969F]">
               <span><strong>14</strong> Orders</span>
@@ -571,7 +571,7 @@ export default function ProfilePage() {
                 <MapPin className="w-4 h-4 text-[#282C3F]" />
                 <div>
                   <h4 className="text-xs font-bold text-[#282C3F]">Saved Delivery Addresses</h4>
-                  <p className="text-[10px] text-[#94969F]">BBCL Vajra, Service Rd, Nolambur</p>
+                  <p className="text-[10px] text-[#94969F]">Prestige Towers, 4th Block, Koramangala</p>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-[#94969F]" />

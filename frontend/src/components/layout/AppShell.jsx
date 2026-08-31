@@ -10,6 +10,7 @@ import { useApp } from '../../context/AppContext';
 import { useGuide } from '../../context/GuideContext';
 import { Wifi, Battery, Signal } from 'lucide-react';
 
+import ErrorBoundary from './ErrorBoundary';
 import ReviewModal from '../review/ReviewModal';
 
 export default function AppShell() {
@@ -69,9 +70,11 @@ export default function AppShell() {
           {/* C. Ambient In-App Notification Push Alert (Section 8/9) */}
           <InAppNotificationToast wishlistItems={wishlist} />
 
-          {/* D. Scrollable Page Body */}
+          {/* D. Scrollable Page Body with ErrorBoundary */}
           <main className="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-white">
-            <Outlet />
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
           </main>
 
           {/* E. Full-Screen Review Submission Modal (Mounted at phone root level) */}

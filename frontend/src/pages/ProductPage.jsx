@@ -9,23 +9,32 @@ import FitLengthBars from '../components/pdp/FitLengthBars';
 import AiTags from '../components/pdp/AiTags';
 import BadgeAggregates from '../components/pdp/BadgeAggregates';
 import CustomerPhotoGallery from '../components/pdp/CustomerPhotoGallery';
-import ReviewFilterChips from '../components/pdp/ReviewFilterChips';
-import ReviewCard from '../components/pdp/ReviewCard';
+import ReviewPreviewCard from '../components/pdp/ReviewPreviewCard';
+import AllReviewsView from '../components/pdp/AllReviewsView';
 import StickyActions from '../components/pdp/StickyActions';
-import { Star, RefreshCw } from 'lucide-react';
+import { enrichReviewsWithPhotos } from '../utils/ugcPhotosHelper';
+import { useGuide } from '../context/GuideContext';
+import { Star, RefreshCw, ChevronRight, Sparkles } from 'lucide-react';
 
 export default function ProductPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const { isGuideMode, currentStepIndex } = useGuide();
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedLightboxPhoto, setSelectedLightboxPhoto] = useState(null);
+
+  // Dedicated All Reviews Full View overlay state (only opened when user clicks View All or rating breakdown)
+  const [showAllReviews, setShowAllReviews] = useState(() => {
+    return searchParams.get('view') === 'all' || searchParams.get('view') === 'reviews';
+  });
 
   // Review Filter States
-  const [activeBadge, setActiveBadge] = useState(searchParams.get('filter') || null);
+  const [activeBadge, setActiveBadge] = useState(null);
   const [activeRating, setActiveRating] = useState(null);
   const [disagreeOnly, setDisagreeOnly] = useState(false);
   const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -57,14 +66,15 @@ export default function ProductPage() {
       if (activeRating) filters.rating = activeRating;
       if (disagreeOnly) filters.disagreeOnly = true;
 
-      const reviewData = await api.getReviews(id, filters);
-      setReviews(reviewData);
+      const rawReviews = await api.getReviews(id, filters);
+      const enriched = enrichReviewsWithPhotos(rawReviews, product);
+      setReviews(enriched);
     } catch (err) {
       console.error('Error loading reviews:', err);
     } finally {
       setReviewsLoading(false);
     }
-  }, [id, activeBadge, activeRating, disagreeOnly]);
+  }, [id, activeBadge, activeRating, disagreeOnly, product]);
 
   useEffect(() => {
     fetchProductData();
@@ -83,6 +93,22 @@ export default function ProductPage() {
     setDisagreeOnly(false);
   };
 
+  const handleSelectBadgeFromDashboard = (badgeKey) => {
+    handleOpenAllReviews(badgeKey);
+  };
+
+  const handleOpenAllReviews = (badgeKey = null) => {
+    if (typeof badgeKey === 'string') {
+      setActiveBadge(badgeKey);
+    }
+    setShowAllReviews(true);
+    const mainEl = document.querySelector('main');
+    if (mainEl) {
+      mainEl.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white min-h-[400px]">
@@ -98,139 +124,136 @@ export default function ProductPage() {
         <p className="text-xs text-[#D5284F] font-bold mb-3">{error || 'Product not found'}</p>
         <button
           onClick={fetchProductData}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FF3F6C] border border-[#FF3F6C] px-4 py-2 rounded-full cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-2 bg-[#FF3F6C] text-white text-xs font-bold rounded-lg hover:bg-[#E0355E] cursor-pointer"
         >
-          <RefreshCw className="w-4 h-4" />
-          <span>Try Again</span>
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>Retry</span>
         </button>
       </div>
     );
   }
 
+  const reviewCount = product.reviewCount || reviews.length || 2569;
+  const ratingsCount = Math.max(reviewCount * 6, 15464);
+
   return (
-    <div className="flex-1 flex flex-col bg-[#F5F5F6] pb-8">
-      {/* 1. Hero Image Gallery */}
+    <div className="flex-1 pb-16 bg-[#F5F5F6] relative">
+      {/* 1. Image Carousel Gallery */}
       <ImageGallery product={product} />
 
-      {/* 2. Brand, Title, Price & Coupon Card */}
+      {/* 2. Product Brand, Name, Pricing & Discount */}
       <ProductInfo product={product} />
 
-      {/* 3. Size Selection */}
+      {/* 3. Size Selector Pill Matrix */}
       <SizeSelector
         product={product}
         selectedSize={selectedSize}
         onSelectSize={setSelectedSize}
       />
 
-      {/* 4. Action Buttons (Buy Now & Add to Bag - In-flow position) */}
-      <StickyActions product={product} selectedSize={selectedSize} />
+      {/* 4. Action Buttons (Buy Now & Add to Bag) */}
+      <StickyActions
+        product={product}
+        selectedSize={selectedSize}
+      />
 
-      {/* 5. Delivery & Product Specifications */}
+      {/* 5. Product Details Accordion / Specification Table */}
       <ProductDetails product={product} />
 
-      {/* 5. Fit and Length Bar Feedback */}
+      {/* 6. Fit & Length Consensus Bars (Part A) */}
       <FitLengthBars product={product} />
 
-      {/* 6. AI Summarized Tags */}
+      {/* 7. AI Summary Tags (Part A) */}
       <AiTags product={product} />
 
-      {/* 7. Trust-Verified Badges Aggregate Dashboard (Part B / Step 4 Target) */}
+      {/* 8. Trust-Verified Badges Aggregate Dashboard (Part B / Step 5 Target) */}
       <div id="trust-dashboard-section">
         <BadgeAggregates
           aggregates={product.badgeAggregates}
           activeBadge={activeBadge}
-          onSelectBadge={setActiveBadge}
+          onSelectBadge={handleSelectBadgeFromDashboard}
         />
       </div>
 
-      {/* 8. Customer Photo Gallery Strip */}
-      <div id="customer-photos-section">
-        <CustomerPhotoGallery
-          images={product.customerPhotos || []}
-          product={product}
-        />
-      </div>
-
-      {/* 9. Ratings & Customer Reviews Section (Step 5 Target) */}
+      {/* 9. Ratings & Reviews Section (Matching Screenshot 1) */}
       <div id="reviews-filter-section" className="bg-white mt-2 border-t border-[#EAEAEC]">
-        
-        {/* Rating Score Summary */}
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h3 className="text-xs font-extrabold text-[#282C3F] uppercase tracking-wider">
-                Ratings & Customer Reviews
-              </h3>
-              <p className="text-[11px] text-[#535766]">
-                Verified buyer community feedback
-              </p>
-            </div>
+        {/* Section Heading */}
+        <div className="px-3 pt-3.5 pb-1">
+          <h2 className="text-sm font-black text-[#282C3F]">
+            Ratings & Reviews
+          </h2>
+        </div>
 
-            {product.rating > 0 && (
-              <div className="flex items-center gap-1 bg-[#03A685] text-white px-2 py-1 rounded text-xs font-black">
-                <span>{product.rating}</span>
-                <Star className="w-3 h-3 fill-white" />
-              </div>
-            )}
+        {/* Rating Score Summary Pill Bar (Tap to View All) */}
+        <div
+          onClick={() => handleOpenAllReviews()}
+          className="mx-3 my-2 p-2.5 bg-[#FAFAFB] hover:bg-[#F5F5F6] border border-[#EAEAEC] rounded-xl flex items-center justify-between cursor-pointer transition-colors shadow-2xs group"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="bg-[#03A685] text-white px-2 py-0.5 rounded text-xs font-black flex items-center gap-0.5 shadow-xs">
+              <span>{product.rating || 4.2}</span>
+              <Star className="w-3 h-3 fill-white" />
+            </div>
+            <div className="text-xs text-[#535766] font-semibold flex items-center gap-1.5">
+              <span>{ratingsCount.toLocaleString()} ratings</span>
+              <span>•</span>
+              <span>{reviewCount.toLocaleString()} reviews</span>
+            </div>
           </div>
+          <ChevronRight className="w-4 h-4 text-[#535766] group-hover:text-[#FF3F6C] transition-colors" />
+        </div>
 
-          {/* Rating Breakdown Bar Chart */}
-          <div className="flex items-center gap-4 bg-[#F5F5F6] p-3 rounded-lg">
-            <div className="text-center pr-3 border-r border-[#D4D5D9]">
-              <span className="text-2xl font-black text-[#282C3F] block leading-none">
-                {product.rating}
-              </span>
-              <div className="flex text-[#03A685] justify-center mt-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3 h-3 ${
-                      i < Math.floor(product.rating) ? 'fill-[#03A685]' : 'text-[#D4D5D9]'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-[9px] text-[#94969F] mt-1 block">
-                {product.reviewCount} Verified
-              </span>
-            </div>
+        {/* Customer Photo Gallery Strip */}
+        <div id="customer-photos-section">
+          <CustomerPhotoGallery
+            product={product}
+            reviews={reviews}
+            selectedPhoto={selectedLightboxPhoto}
+            onSelectPhoto={setSelectedLightboxPhoto}
+            onClosePhoto={() => setSelectedLightboxPhoto(null)}
+          />
+        </div>
 
-            <div className="flex-1 space-y-1 text-[10px] text-[#535766]">
-              <div className="flex items-center gap-1.5">
-                <span>5★</span>
-                <div className="flex-1 h-1.5 bg-[#EAEAEC] rounded-full overflow-hidden">
-                  <div className="bg-[#03A685] h-full w-[70%]"></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span>4★</span>
-                <div className="flex-1 h-1.5 bg-[#EAEAEC] rounded-full overflow-hidden">
-                  <div className="bg-[#03A685] h-full w-[20%]"></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span>3★</span>
-                <div className="flex-1 h-1.5 bg-[#EAEAEC] rounded-full overflow-hidden">
-                  <div className="bg-[#F5A623] h-full w-[7%]"></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span>2★</span>
-                <div className="flex-1 h-1.5 bg-[#EAEAEC] rounded-full overflow-hidden">
-                  <div className="bg-[#D5284F] h-full w-[3%]"></div>
-                </div>
-              </div>
-            </div>
+        {/* Customer Reviews Subsection Header with 'View All' Link */}
+        <div className="px-3 pt-3 pb-1.5 flex items-center justify-between">
+          <h3 className="text-xs font-black text-[#282C3F]">
+            Customer Reviews ({reviewCount.toLocaleString()})
+          </h3>
+          <div className="flex items-center gap-1.5">
+            {isGuideMode && (
+              <span className="inline-flex items-center gap-1 bg-[#FFF0F3] text-[#FF3F6C] border border-[#FF3F6C]/40 text-[9.5px] font-extrabold px-2 py-0.5 rounded-full animate-pulse shadow-2xs">
+                👉 Click to view all reviews
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => handleOpenAllReviews()}
+              className="text-xs font-bold text-[#FF3F6C] hover:underline cursor-pointer flex items-center gap-0.5 group"
+            >
+              <span className="group-hover:translate-x-0.5 transition-transform">View All</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
-        {/* 10. Real Customer Photo Reviews Gallery & Lightbox */}
-        <CustomerPhotoGallery product={product} reviews={reviews} />
+        {/* Horizontal Scroll Carousel of Preview Cards (Matching Screenshot 1) */}
+        <div className="flex items-stretch gap-3 overflow-x-auto no-scrollbar px-3 pb-4 pt-1">
+          {reviews.slice(0, 6).map((rev) => (
+            <ReviewPreviewCard
+              key={rev.id}
+              review={rev}
+              onReadMore={() => handleOpenAllReviews()}
+              onPhotoClick={setSelectedLightboxPhoto}
+            />
+          ))}
+        </div>
+      </div>
 
-        {/* 11. Filter Chips for Reviews (Part B) */}
-        <ReviewFilterChips
-          category={product.category}
-          totalReviews={product.reviewCount || reviews.length}
+      {/* 10. Dedicated All Reviews Full Screen View (Matching Screenshot 2) */}
+      {showAllReviews && (
+        <AllReviewsView
+          product={product}
+          reviews={reviews}
           activeBadge={activeBadge}
           onBadgeChange={setActiveBadge}
           activeRating={activeRating}
@@ -238,30 +261,12 @@ export default function ProductPage() {
           disagreeOnly={disagreeOnly}
           onDisagreeToggle={() => setDisagreeOnly((prev) => !prev)}
           onClearFilters={handleClearFilters}
+          onClose={() => setShowAllReviews(false)}
+          selectedLightboxPhoto={selectedLightboxPhoto}
+          onSelectPhoto={setSelectedLightboxPhoto}
+          onClosePhoto={() => setSelectedLightboxPhoto(null)}
         />
-
-        {/* 11. Filtered Review List */}
-        <div className="p-3 space-y-3">
-          {reviewsLoading ? (
-            <div className="py-6 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-[#FF3F6C] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : reviews.length === 0 ? (
-            <div className="text-center py-6 bg-[#FAFAFB] rounded-xl border border-dashed border-[#D4D5D9]">
-              <p className="text-xs font-bold text-[#535766]">No reviews match this filter.</p>
-              <button
-                type="button"
-                onClick={handleClearFilters}
-                className="mt-2 text-xs font-bold text-[#FF3F6C] hover:underline cursor-pointer"
-              >
-                Clear all filters
-              </button>
-            </div>
-          ) : (
-            reviews.map((rev) => <ReviewCard key={rev.id} review={rev} />)
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

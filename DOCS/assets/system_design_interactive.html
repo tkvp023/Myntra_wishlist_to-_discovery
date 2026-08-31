@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Myntra Trust-Verified System Design Architecture</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Assistant', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .neon-border {
+      box-shadow: 0 0 25px rgba(255, 63, 108, 0.15), inset 0 0 15px rgba(255, 63, 108, 0.05);
+    }
+    .neon-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+    }
+    .neon-green {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+    }
+    .tab-active {
+      background-color: #FF3F6C;
+      color: #FFFFFF;
+      box-shadow: 0 0 15px rgba(255, 63, 108, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-[#0A0C14] text-gray-100 min-h-screen p-6 md:p-12">
+  <div class="max-w-6xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <div class="border-b border-gray-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full text-xs font-black bg-[#FF3F6C]/20 text-[#FF3F6C] border border-[#FF3F6C]/40 uppercase tracking-widest">System Architecture</span>
+          <span class="text-xs text-gray-400 font-mono">P99 &lt; 45ms • 150M+ Views/Day</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mt-2 tracking-tight">
+          Myntra Trust-Verified Architecture
+        </h1>
+        <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+          Visual architecture diagrams spanning High-Level Conceptual Flywheel (HLD) and Enterprise Microservices Topology (LLD).
+        </p>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="flex items-center bg-[#161B2E] p-1.5 rounded-2xl border border-gray-800 self-start md:self-auto">
+        <button id="tab-hld" onclick="switchTab('hld')" class="px-5 py-2 rounded-xl text-xs font-extrabold transition-all tab-active">
+          High-Level Design (HLD)
+        </button>
+        <button id="tab-lld" onclick="switchTab('lld')" class="px-5 py-2 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition-all">
+          Enterprise Low-Level (LLD)
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 1: HIGH LEVEL DESIGN (HLD) -->
+    <div id="view-hld" class="space-y-6">
+      
+      <!-- HLD Concept Summary Card -->
+      <div class="bg-gradient-to-r from-[#1A1D2E] to-[#121624] border border-[#FF3F6C]/30 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center gap-2 mb-2 text-[#FF3F6C] text-xs font-black uppercase tracking-wider">
+          <span>🔄 The Closed-Loop Trust Flywheel</span>
+        </div>
+        <h2 class="text-xl font-bold text-white">How the System Works at a High Level</h2>
+        <p class="text-xs text-gray-300 mt-1 leading-relaxed max-w-3xl">
+          Verified buyers submit 1-tap attribute validation post-purchase. The statistical consensus engine aggregates positive ratios past a 50-response threshold and feeds live trust signals into PDPs, search results, and stalled wishlist items to convert hesitant shoppers without discounting.
+        </p>
+      </div>
+
+      <!-- High-Level Diagram Image Embed -->
+      <div class="bg-[#121624] border border-gray-800 rounded-2xl p-4 overflow-hidden shadow-2xl">
+        <img src="myntra_high_level_system_design.jpg" alt="Myntra High Level System Design" class="w-full h-auto rounded-xl border border-gray-800 object-cover" />
+      </div>
+
+      <!-- 4 Core High-Level Blocks -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-[#121624] border border-[#FF3F6C]/40 rounded-2xl p-5 neon-border">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-[#FF3F6C]/20 text-[#FF3F6C] flex items-center justify-center text-sm font-black">1</span>
+            <h3 class="text-sm font-bold text-white">Block 1: Shopper Experience</h3>
+          </div>
+          <p class="text-xs text-gray-400">Mobile app presentation featuring PDP Trust Dashboard, criterion filter chips, daylight photo gallery, and occasion wishlist tags.</p>
+        </div>
+
+        <div class="bg-[#121624] border border-cyan-500/40 rounded-2xl p-5 neon-cyan">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-black">2</span>
+            <h3 class="text-sm font-bold text-white">Block 2: Trust-Verified Core Engine</h3>
+          </div>
+          <p class="text-xs text-gray-400">1-tap category-aware review modal flow sequenced before optional text, gated by verified purchase order token.</p>
+        </div>
+
+        <div class="bg-[#121624] border border-purple-500/40 rounded-2xl p-5">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-black">3</span>
+            <h3 class="text-sm font-bold text-white">Block 3: Statistical Consensus Engine</h3>
+          </div>
+          <p class="text-xs text-gray-400">Enforces the 50-Submission Confidence Gate (&ge;50 percentage mode vs &lt;50 raw momentum count mode) to prevent early skew.</p>
+        </div>
+
+        <div class="bg-[#121624] border border-emerald-500/40 rounded-2xl p-5 neon-green">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-black">4</span>
+            <h3 class="text-sm font-bold text-white">Block 4: Multi-Tier Storage & Push Engine</h3>
+          </div>
+          <p class="text-xs text-gray-400">In-memory caching for sub-45ms reads and automated milestone push notification triggers for stalled wishlists.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: LOW LEVEL ENTERPRISE DESIGN (LLD) -->
+    <div id="view-lld" class="space-y-6 hidden">
+      
+      <!-- Enterprise LLD Image Embed -->
+      <div class="bg-[#121624] border border-gray-800 rounded-2xl p-4 overflow-hidden shadow-2xl">
+        <img src="myntra_system_design_diagram.jpg" alt="Myntra Enterprise System Design" class="w-full h-auto rounded-xl border border-gray-800 object-cover" />
+      </div>
+
+      <!-- 6 Tiers Breakdown -->
+      <div class="bg-[#121624] border border-gray-800 rounded-2xl p-5 space-y-4">
+        <h3 class="text-sm font-black uppercase text-[#FF3F6C] tracking-wider">Enterprise 6-Tier Architecture Details</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-gray-300">
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 1: Clients</strong>
+            Native iOS (Swift), Android (Kotlin), Mobile Web (React) with optimistic local filtering.
+          </div>
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 2: Edge & Gateway</strong>
+            Cloudflare/Akamai Edge CDN (60s TTL) + Envoy Gateway (Rate limiting, auth token validation).
+          </div>
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 3: Microservices</strong>
+            Review Ingestion, Catalog PDP, Wishlist, UGC Vision AI, and Push Campaign Engine.
+          </div>
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 4: Event Backbone</strong>
+            Apache Kafka cluster partitioned by <code>productId</code> for high-throughput event ingestion.
+          </div>
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 5: Stream Aggregator</strong>
+            Apache Flink real-time stream aggregation enforcing the 50-submission threshold gate.
+          </div>
+          <div class="bg-[#1A1F33] p-3 rounded-xl border border-gray-700">
+            <strong class="text-white block mb-1">Tier 6: Storage & Cache</strong>
+            Redis Cluster (&lt;2ms reads), PostgreSQL Master DB, AWS S3 UGC Bucket, and Snowflake OLAP.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      const hldTab = document.getElementById('tab-hld');
+      const lldTab = document.getElementById('tab-lld');
+      const hldView = document.getElementById('view-hld');
+      const lldView = document.getElementById('view-lld');
+
+      if (tab === 'hld') {
+        hldTab.className = 'px-5 py-2 rounded-xl text-xs font-extrabold transition-all tab-active';
+        lldTab.className = 'px-5 py-2 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition-all';
+        hldView.classList.remove('hidden');
+        lldView.classList.add('hidden');
+      } else {
+        lldTab.className = 'px-5 py-2 rounded-xl text-xs font-extrabold transition-all tab-active';
+        hldTab.className = 'px-5 py-2 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition-all';
+        lldView.classList.remove('hidden');
+        hldView.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

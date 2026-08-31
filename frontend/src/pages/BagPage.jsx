@@ -95,7 +95,7 @@ export default function BagPage() {
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-[#535766]">Delivery Address</span>
-            <span className="font-bold text-[#282C3F] truncate max-w-[160px]">BBCL Vajra, Chennai</span>
+            <span className="font-bold text-[#282C3F] truncate max-w-[160px]">Prestige Towers, Bengaluru</span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-[#535766]">Total Paid</span>
@@ -155,7 +155,7 @@ export default function BagPage() {
         <div className="flex items-center gap-2 min-w-0">
           <MapPin className="w-3.5 h-3.5 text-[#FF3F6C] flex-shrink-0" />
           <span className="text-[11px] text-[#282C3F] truncate font-medium">
-            Deliver to: <strong className="font-bold text-[#282C3F]">BBCL Vajra, 600095</strong>
+            Deliver to: <strong className="font-bold text-[#282C3F]">Prestige Towers, 560034</strong>
           </span>
         </div>
         <button

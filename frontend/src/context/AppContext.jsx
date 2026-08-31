@@ -267,8 +267,8 @@ export function AppProvider({ children }) {
     try {
       const saved = localStorage.getItem('myntra_wishlist_tags');
       return saved ? JSON.parse(saved) : {
-        prod_1: ['💼 Workwear', '✨ Aspirational'],
-        prod_2: ['🎁 Gift Idea'],
+        prod_1: ['🏖️ Vacation'],
+        prod_2: ['⚖️ Price Comparison'],
         prod_3: ['🏖️ Vacation']
       };
     } catch {
@@ -345,7 +345,33 @@ export function AppProvider({ children }) {
 export function useApp() {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error('useApp must be used within an AppProvider');
+    return {
+      wishlist: [],
+      loadingWishlist: false,
+      isWishlisted: () => false,
+      toggleWishlist: () => {},
+      removeFromWishlist: () => {},
+      fetchWishlist: () => {},
+      bag: [],
+      bagCount: 0,
+      bagTotal: 0,
+      bagDiscount: 0,
+      bagFinal: 0,
+      addToBag: () => {},
+      removeFromBag: () => {},
+      updateBagQuantity: () => {},
+      updateBagSize: () => {},
+      moveToBagFromWishlist: () => {},
+      moveToWishlistFromBag: () => {},
+      clearBag: () => {},
+      isSearchOpen: false,
+      setIsSearchOpen: () => {},
+      showToast: () => {},
+      toastMessage: null,
+      reviewModalProduct: null,
+      openReviewModal: () => {},
+      closeReviewModal: () => {}
+    };
   }
   return context;
 }

@@ -34,7 +34,7 @@ export default function SavedItemMilestoneCard({
 
   const img = getProductImageUrl(p?.images?.[0], p?.category, 1);
   const days = daysSaved || item.daysStalled || (idx + 2);
-  const deepLink = `/product/${p.id}?filter=${item.reengagement?.deepLinkFilter || 'authenticity'}`;
+  const deepLink = `/product/${p.id}`;
 
   const handleClick = () => {
     if (onClick) {

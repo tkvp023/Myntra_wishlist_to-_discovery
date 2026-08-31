@@ -12,8 +12,11 @@ export default function TopHeader() {
 
   const isHome = location.pathname === '/';
   const isPDP = location.pathname.startsWith('/product');
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const isWishlist = location.pathname === '/wishlist';
+  const isBag = location.pathname === '/bag';
+  const hideHeader = isWishlist || isBag;
 
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const placeholders = ['"Tops"', '"Shirts"', '"Kurta Sets"', '"Shoes"', '"Jeans"', '"Dresses"'];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 
@@ -24,14 +27,14 @@ export default function TopHeader() {
     return () => clearInterval(interval);
   }, []);
 
-  // Notifications exist if wishlisted items have trust aggregate data
   const hasNotifications = wishlist.some(
     (item) => item.reengagement?.hasData && item.reengagement?.message
   );
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white border-b border-[#EAEAEC] select-none flex flex-col shadow-2xs">
+      {!hideHeader && (
+        <header className="sticky top-0 z-40 bg-white border-b border-[#EAEAEC] select-none flex flex-col shadow-2xs">
         
         {/* 1. TOP ADDRESS BAR & MYNTRA CASH ROW (Home only) */}
         {isHome ? (
@@ -40,7 +43,7 @@ export default function TopHeader() {
             <div className="flex items-center gap-1.5 min-w-0 flex-1 cursor-pointer">
               <MapPin className="w-3.5 h-3.5 text-[#282C3F] flex-shrink-0 fill-[#282C3F]" />
               <span className="text-[11px] font-extrabold text-[#282C3F] truncate">
-                Deliver to <strong className="font-black">BBCL Vajra</strong> - Bbcl Vajra, Service R...
+                Deliver to <strong className="font-black">Prestige Towers</strong> - 4th Block, Koramangala...
               </span>
               <ChevronDown className="w-3.5 h-3.5 text-[#535766] flex-shrink-0 ml-0.5" />
             </div>
@@ -148,6 +151,7 @@ export default function TopHeader() {
           </div>
         </div>
       </header>
+      )}
 
       {/* Section 8 Search Overlay */}
       <SearchOverlay

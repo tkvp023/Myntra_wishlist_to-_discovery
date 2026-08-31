@@ -1,9 +1,8 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma');
 const { POSITIVE_VALUES, NEGATIVE_VALUES } = require('../utils/badgeHelper');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 const BADGE_FIELD_MAP = {
   authenticity: 'badgeAuthenticity',
@@ -21,13 +20,14 @@ const BADGE_FIELD_MAP = {
 router.get('/:id/reviews', async (req, res, next) => {
   try {
     const { id } = req.params;
+    const sanitizedId = String(id).slice(0, 50);
     const { badge, value, disagreeOnly, rating, sort } = req.query;
 
-    const where = { productId: id };
+    const where = { productId: sanitizedId };
 
     // Star rating filter
     if (rating && !isNaN(Number(rating))) {
-      where.rating = Number(rating);
+      where.rating = Math.max(1, Math.min(5, Math.floor(Number(rating))));
     }
 
     // Badge filter
@@ -38,7 +38,7 @@ router.get('/:id/reviews', async (req, res, next) => {
         const negativeVals = NEGATIVE_VALUES[badge] || [];
         where[fieldName] = { in: negativeVals };
       } else if (value) {
-        where[fieldName] = value;
+        where[fieldName] = String(value).slice(0, 50);
       } else {
         // Filter by positive value by default if badge is selected without specific value
         const positiveVal = POSITIVE_VALUES[badge];
@@ -71,11 +71,13 @@ router.get('/:id/reviews', async (req, res, next) => {
 router.post('/:id/reviews', async (req, res, next) => {
   try {
     const { id } = req.params;
+    const sanitizedId = String(id).slice(0, 50);
     const {
       userName,
       rating,
       text,
       sizeBought,
+      images,
       badgeAuthenticity,
       badgeFit,
       badgePhotoMatch,
@@ -104,7 +106,7 @@ router.post('/:id/reviews', async (req, res, next) => {
       : null;
 
     const product = await prisma.product.findUnique({
-      where: { id }
+      where: { id: sanitizedId }
     });
 
     if (!product) {
@@ -114,7 +116,7 @@ router.post('/:id/reviews', async (req, res, next) => {
     // Create the review record
     const newReview = await prisma.review.create({
       data: {
-        productId: id,
+        productId: sanitizedId,
         userName: sanitizedUserName,
         rating: sanitizedRating,
         text: sanitizedText,
@@ -133,7 +135,7 @@ router.post('/:id/reviews', async (req, res, next) => {
 
     // Update product rating and reviewCount
     const allReviews = await prisma.review.findMany({
-      where: { productId: id },
+      where: { productId: sanitizedId },
       select: { rating: true }
     });
 
@@ -143,7 +145,7 @@ router.post('/:id/reviews', async (req, res, next) => {
       : 0;
 
     await prisma.product.update({
-      where: { id },
+      where: { id: sanitizedId },
       data: {
         rating: avgRating,
         reviewCount: totalCount

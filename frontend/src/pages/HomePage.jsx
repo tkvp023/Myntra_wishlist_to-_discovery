@@ -442,7 +442,7 @@ export default function HomePage() {
             const img = getProductImageUrl(p?.images?.[0], p?.category, 1);
             const compactStats = getCompactTrustStats(single);
             const daysSaved = single.daysStalled || 4;
-            const deepLink = `/product/${p.id}?filter=${single.reengagement?.deepLinkFilter || 'authenticity'}`;
+            const deepLink = `/product/${p.id}`;
 
             return (
               <div
