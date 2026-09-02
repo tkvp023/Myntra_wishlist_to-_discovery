@@ -87,6 +87,62 @@ export default function ProductPage() {
     }
   }, [product, fetchReviews]);
 
+  // Auto-scroll to target section on ProductPage when entering Step 5 or Step 6
+  useEffect(() => {
+    if (loading || !product) return;
+
+    if (isGuideMode) {
+      if (currentStepIndex === 4) {
+        // Step 5: Trust Dashboard
+        setShowAllReviews(false);
+        const scroll = () => {
+          const el = document.getElementById('trust-dashboard-section');
+          const mainEl = document.querySelector('main');
+          if (el && mainEl) {
+            const mainRect = mainEl.getBoundingClientRect();
+            const elRect = el.getBoundingClientRect();
+            const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+            mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+          }
+        };
+        scroll();
+        const t1 = setTimeout(scroll, 100);
+        const t2 = setTimeout(scroll, 350);
+        const t3 = setTimeout(scroll, 700);
+        return () => {
+          clearTimeout(t1);
+          clearTimeout(t2);
+          clearTimeout(t3);
+        };
+      } else if (currentStepIndex === 5) {
+        // Step 6: Review Filters
+        setShowAllReviews(false);
+        const scroll = () => {
+          const el = document.getElementById('reviews-filter-section');
+          const mainEl = document.querySelector('main');
+          if (el && mainEl) {
+            const mainRect = mainEl.getBoundingClientRect();
+            const elRect = el.getBoundingClientRect();
+            const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+            mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+          }
+        };
+        scroll();
+        const t1 = setTimeout(scroll, 100);
+        const t2 = setTimeout(scroll, 350);
+        const t3 = setTimeout(scroll, 700);
+        return () => {
+          clearTimeout(t1);
+          clearTimeout(t2);
+          clearTimeout(t3);
+        };
+      } else {
+        // Any other step: ensure full review overlay is closed
+        setShowAllReviews(false);
+      }
+    }
+  }, [loading, product, currentStepIndex, isGuideMode]);
+
   const handleClearFilters = () => {
     setActiveBadge(null);
     setActiveRating(null);
@@ -167,7 +223,14 @@ export default function ProductPage() {
       <AiTags product={product} />
 
       {/* 8. Trust-Verified Badges Aggregate Dashboard (Part B / Step 5 Target) */}
-      <div id="trust-dashboard-section">
+      <div
+        id="trust-dashboard-section"
+        className={`transition-all duration-300 rounded-xl ${
+          isGuideMode && currentStepIndex === 4
+            ? 'ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)]'
+            : ''
+        }`}
+      >
         <BadgeAggregates
           aggregates={product.badgeAggregates}
           activeBadge={activeBadge}
@@ -175,8 +238,15 @@ export default function ProductPage() {
         />
       </div>
 
-      {/* 9. Ratings & Reviews Section (Matching Screenshot 1) */}
-      <div id="reviews-filter-section" className="bg-white mt-2 border-t border-[#EAEAEC]">
+      {/* 9. Ratings & Reviews Section (Matching Screenshot 1 / Step 6 Target) */}
+      <div
+        id="reviews-filter-section"
+        className={`bg-white mt-2 border-t border-[#EAEAEC] transition-all duration-300 ${
+          isGuideMode && currentStepIndex === 5
+            ? 'ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)]'
+            : ''
+        }`}
+      >
         {/* Section Heading */}
         <div className="px-3 pt-3.5 pb-1">
           <h2 className="text-sm font-black text-[#282C3F]">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client';
 import { useApp } from '../context/AppContext';
+import { useGuide } from '../context/GuideContext';
 import ProductCard from '../components/home/ProductCard';
 import SavedItemMilestoneCard from '../components/home/SavedItemMilestoneCard';
 import {
@@ -211,6 +212,33 @@ export default function HomePage() {
       setSelectedSubcategory(bubble.subcategory || 'all');
     }
   };
+
+  const { isGuideMode, currentStepIndex } = useGuide();
+
+  // Scroll to saved-items-section when landing on Step 2
+  useEffect(() => {
+    if (!isGuideMode || currentStepIndex !== 1 || loading) return;
+
+    const scroll = () => {
+      const el = document.getElementById('saved-items-section');
+      const mainEl = document.querySelector('main');
+      if (el && mainEl) {
+        const mainRect = mainEl.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+        mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+      }
+    };
+    scroll();
+    const t1 = setTimeout(scroll, 100);
+    const t2 = setTimeout(scroll, 350);
+    const t3 = setTimeout(scroll, 700);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [isGuideMode, currentStepIndex, loading]);
 
   useEffect(() => {
     fetchCatalog(activeMainTab, selectedCategory, selectedSubcategory);

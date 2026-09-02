@@ -29,6 +29,32 @@ export default function ProfilePage() {
 
   const isStep7 = guideContext?.isGuideMode && guideContext?.currentStepIndex === 6;
   const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'reviews' | 'account'
+
+  // Ensure activeTab is orders and auto-scroll to review trigger when on Step 7
+  React.useEffect(() => {
+    if (isStep7) {
+      setActiveTab('orders');
+      const scroll = () => {
+        const el = document.getElementById('orders-review-trigger');
+        const mainEl = document.querySelector('main');
+        if (el && mainEl) {
+          const mainRect = mainEl.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 20;
+          mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        }
+      };
+      scroll();
+      const t1 = setTimeout(scroll, 100);
+      const t2 = setTimeout(scroll, 350);
+      const t3 = setTimeout(scroll, 700);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    }
+  }, [isStep7]);
   const [orders, setOrders] = useState([
     {
       id: 'MYN-89342',

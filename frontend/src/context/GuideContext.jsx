@@ -125,15 +125,32 @@ export function GuideProvider({ children }) {
       setIsSearchOpen(false);
     }
 
-    // Smooth scroll to target element if present
-    setTimeout(() => {
-      if (targetStep?.targetElementId) {
+    // Robust scroll runner: attempts scrolling the <main> container with staggered retries for network/render delays
+    if (targetStep?.targetElementId) {
+      const runScroll = () => {
         const el = document.getElementById(targetStep.targetElementId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const mainEl = document.querySelector('main');
+        if (el && mainEl) {
+          const mainRect = mainEl.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+          mainEl.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: 'smooth'
+          });
+          return true;
         }
-      }
-    }, 250);
+        return false;
+      };
+
+      // Staggered attempts to guarantee execution as DOM elements render
+      runScroll();
+      setTimeout(runScroll, 80);
+      setTimeout(runScroll, 200);
+      setTimeout(runScroll, 400);
+      setTimeout(runScroll, 700);
+      setTimeout(runScroll, 1100);
+    }
   }, [location.pathname, navigate, setIsSearchOpen, closeReviewModal]);
 
   const nextStep = useCallback(() => {
