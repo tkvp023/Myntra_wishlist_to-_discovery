@@ -10,22 +10,36 @@ export function GuideProvider({ children }) {
   const location = useLocation();
   const { setIsSearchOpen, closeReviewModal } = useApp();
 
-  // Guide Mode toggle state (defaults to true on desktop)
+  // Guide Mode toggle state (defaults to true for assignment evaluators)
   const [isGuideMode, setIsGuideMode] = useState(() => {
     try {
-      const saved = localStorage.getItem('myntra_walkthrough_mode');
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'normal') return false;
+      if (params.get('mode') === 'walkthrough' || params.get('mode') === 'guide') return true;
+      const saved = sessionStorage.getItem('myntra_walkthrough_mode');
       return saved !== null ? JSON.parse(saved) : true;
     } catch {
       return true;
     }
   });
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const stepParam = parseInt(params.get('step'), 10);
+      if (!isNaN(stepParam) && stepParam >= 1 && stepParam <= TOUR_STEPS.length) {
+        return stepParam - 1;
+      }
+      return 0; // Default to 1st Step
+    } catch {
+      return 0;
+    }
+  });
 
-  // Sync isGuideMode to localStorage
+  // Sync isGuideMode to sessionStorage so each fresh browser visit starts in Walkthrough Mode
   useEffect(() => {
     try {
-      localStorage.setItem('myntra_walkthrough_mode', JSON.stringify(isGuideMode));
+      sessionStorage.setItem('myntra_walkthrough_mode', JSON.stringify(isGuideMode));
     } catch (err) {
       console.error('Failed to persist walkthrough mode:', err);
     }
@@ -79,9 +93,19 @@ export function GuideProvider({ children }) {
     }
   }, [currentStepIndex, goToStep]);
 
-  const toggleGuideMode = useCallback(() => {
-    setIsGuideMode((prev) => !prev);
-  }, []);
+  const toggleGuideMode = useCallback((targetMode = null) => {
+    setIsGuideMode((prev) => {
+      const next = typeof targetMode === 'boolean' ? targetMode : !prev;
+      if (next) {
+        // When switching back to guide mode, navigate to current step route
+        const targetStep = TOUR_STEPS[currentStepIndex] || TOUR_STEPS[0];
+        if (targetStep && location.pathname !== targetStep.route) {
+          navigate(targetStep.route);
+        }
+      }
+      return next;
+    });
+  }, [currentStepIndex, location.pathname, navigate]);
 
   const value = {
     isGuideMode,
