@@ -5,6 +5,30 @@ import { TOUR_STEPS } from './tourSteps';
 
 const GuideContext = createContext(null);
 
+const getStepIndexForRoute = (pathname, preferredIdx = 0) => {
+  if (pathname === '/wishlist') {
+    return 3; // Step 4: Wishlist Ratings
+  }
+  if (pathname.startsWith('/product')) {
+    // If already on Step 5 (idx 4) or Step 6 (idx 5), preserve it; otherwise default to Step 5
+    if (preferredIdx === 4 || preferredIdx === 5) {
+      return preferredIdx;
+    }
+    return 4; // Step 5: Trust Dashboard
+  }
+  if (pathname === '/profile') {
+    return 6; // Step 7: Review Submission
+  }
+  if (pathname === '/') {
+    // If on homepage and preferred is Step 1 (0), Step 2 (1), or Step 3 (2), keep it
+    if (preferredIdx === 0 || preferredIdx === 1 || preferredIdx === 2) {
+      return preferredIdx;
+    }
+    return 0; // Step 1: Push Notification
+  }
+  return preferredIdx;
+};
+
 export function GuideProvider({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,6 +47,7 @@ export function GuideProvider({ children }) {
     }
   });
 
+  // Initialize step strictly connected to current URL route on load/reload
   const [currentStepIndex, setCurrentStepIndex] = useState(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -30,13 +55,15 @@ export function GuideProvider({ children }) {
       if (!isNaN(stepParam) && stepParam >= 1 && stepParam <= TOUR_STEPS.length) {
         return stepParam - 1;
       }
-      return 0; // Default to 1st Step
+      const savedStep = sessionStorage.getItem('myntra_tour_current_step');
+      const parsedSaved = savedStep !== null ? parseInt(savedStep, 10) : 0;
+      return getStepIndexForRoute(window.location.pathname, parsedSaved);
     } catch {
       return 0;
     }
   });
 
-  // Sync isGuideMode to sessionStorage so each fresh browser visit starts in Walkthrough Mode
+  // Sync isGuideMode to sessionStorage
   useEffect(() => {
     try {
       sessionStorage.setItem('myntra_walkthrough_mode', JSON.stringify(isGuideMode));
@@ -44,6 +71,36 @@ export function GuideProvider({ children }) {
       console.error('Failed to persist walkthrough mode:', err);
     }
   }, [isGuideMode]);
+
+  // Sync currentStepIndex to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('myntra_tour_current_step', currentStepIndex.toString());
+    } catch (err) {
+      console.error('Failed to persist step index:', err);
+    }
+  }, [currentStepIndex]);
+
+  // Bidirectional Synchronization: When user navigates on screen, keep Walkthrough Step strictly connected
+  useEffect(() => {
+    if (!isGuideMode) return;
+
+    setCurrentStepIndex((prevIdx) => {
+      const targetStep = TOUR_STEPS[prevIdx];
+      // Check if current route matches the expected step route
+      const isRouteMatching =
+        (targetStep.route === '/' && location.pathname === '/') ||
+        (targetStep.route === '/wishlist' && location.pathname === '/wishlist') ||
+        (targetStep.route.startsWith('/product') && location.pathname.startsWith('/product')) ||
+        (targetStep.route === '/profile' && location.pathname === '/profile');
+
+      if (!isRouteMatching) {
+        const syncedIdx = getStepIndexForRoute(location.pathname, prevIdx);
+        return syncedIdx;
+      }
+      return prevIdx;
+    });
+  }, [location.pathname, isGuideMode]);
 
   const currentStep = TOUR_STEPS[currentStepIndex] || TOUR_STEPS[0];
 
