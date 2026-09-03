@@ -115,8 +115,8 @@ export default function ProductPage() {
           clearTimeout(t3);
         };
       } else if (currentStepIndex === 5) {
-        // Step 6: Review Filters
-        setShowAllReviews(false);
+        // Step 6: Review Filters (Open dedicated reviews overlay with filter chips)
+        setShowAllReviews(true);
         const scroll = () => {
           const el = document.getElementById('reviews-filter-section');
           const mainEl = document.querySelector('main');

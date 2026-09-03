@@ -126,7 +126,20 @@ export function GuideProvider({ children }) {
     }
 
     // Robust scroll runner: attempts scrolling the <main> container with staggered retries for network/render delays
-    if (targetStep?.targetElementId) {
+    if (index === 0) {
+      const runScrollTop = () => {
+        const mainEl = document.querySelector('main');
+        if (mainEl) {
+          mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+          return true;
+        }
+        return false;
+      };
+      runScrollTop();
+      setTimeout(runScrollTop, 80);
+      setTimeout(runScrollTop, 200);
+      setTimeout(runScrollTop, 450);
+    } else if (targetStep?.targetElementId) {
       const runScroll = () => {
         const el = document.getElementById(targetStep.targetElementId);
         const mainEl = document.querySelector('main');

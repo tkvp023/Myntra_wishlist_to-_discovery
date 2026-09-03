@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import WishlistCard from '../components/wishlist/WishlistCard';
 import ReengagementCard from '../components/wishlist/ReengagementCard';
 import CollectionsView from '../components/wishlist/CollectionsView';
+import { useGuide } from '../context/GuideContext';
 import {
   Heart,
   ShoppingBag,
@@ -129,10 +130,38 @@ export default function WishlistPage() {
     }
   };
 
+  const guideContext = useGuide();
+  const isStep4 = guideContext?.isGuideMode && guideContext?.currentStepIndex === 3;
+
   useEffect(() => {
     fetchWishlist();
     window.scrollTo(0, 0);
   }, []);
+
+  // Auto-scroll to wishlist grid section when entering Step 4
+  useEffect(() => {
+    if (isStep4 && !loading) {
+      const scroll = () => {
+        const el = document.getElementById('wishlist-grid-section');
+        const mainEl = document.querySelector('main');
+        if (el && mainEl) {
+          const mainRect = mainEl.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+          mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        }
+      };
+      scroll();
+      const t1 = setTimeout(scroll, 100);
+      const t2 = setTimeout(scroll, 350);
+      const t3 = setTimeout(scroll, 700);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    }
+  }, [isStep4, loading]);
 
   const handleRemove = async (productId) => {
     try {
@@ -432,7 +461,14 @@ export default function WishlistPage() {
           )}
 
           {/* 7. Wishlist Grid */}
-          <div id="wishlist-grid-section" className="grid grid-cols-2 gap-2.5">
+          <div
+            id="wishlist-grid-section"
+            className={`grid grid-cols-2 gap-2.5 transition-all duration-300 rounded-xl p-1 ${
+              isStep4
+                ? 'ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)] bg-[#FFF5F7]/30'
+                : ''
+            }`}
+          >
             {displayedItems.map((item, index) => (
               <WishlistCard
                 key={item.id}

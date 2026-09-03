@@ -215,29 +215,47 @@ export default function HomePage() {
 
   const { isGuideMode, currentStepIndex } = useGuide();
 
-  // Scroll to saved-items-section when landing on Step 2
+  // Scroll to top when on Step 1, or to saved-items-section when landing on Step 2
   useEffect(() => {
-    if (!isGuideMode || currentStepIndex !== 1 || loading) return;
+    if (!isGuideMode || loading) return;
 
-    const scroll = () => {
-      const el = document.getElementById('saved-items-section');
-      const mainEl = document.querySelector('main');
-      if (el && mainEl) {
-        const mainRect = mainEl.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
-        mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-      }
-    };
-    scroll();
-    const t1 = setTimeout(scroll, 100);
-    const t2 = setTimeout(scroll, 350);
-    const t3 = setTimeout(scroll, 700);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
+    if (currentStepIndex === 0) {
+      const scroll = () => {
+        const mainEl = document.querySelector('main');
+        if (mainEl) {
+          mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      };
+      scroll();
+      const t1 = setTimeout(scroll, 80);
+      const t2 = setTimeout(scroll, 200);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+
+    if (currentStepIndex === 1) {
+      const scroll = () => {
+        const el = document.getElementById('saved-items-section');
+        const mainEl = document.querySelector('main');
+        if (el && mainEl) {
+          const mainRect = mainEl.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
+          mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        }
+      };
+      scroll();
+      const t1 = setTimeout(scroll, 100);
+      const t2 = setTimeout(scroll, 350);
+      const t3 = setTimeout(scroll, 700);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    }
   }, [isGuideMode, currentStepIndex, loading]);
 
   useEffect(() => {
@@ -476,7 +494,11 @@ export default function HomePage() {
               <div
                 id="saved-items-section"
                 onClick={() => navigate(deepLink)}
-                className="mx-3 mt-2 p-2 bg-gradient-to-r from-[#FFF0F3] to-[#FFF8F9] border border-[#FF3F6C]/25 rounded-xl shadow-2xs cursor-pointer hover:border-[#FF3F6C] transition-all group animate-fade-in"
+                className={`mx-3 mt-2 p-2 bg-gradient-to-r from-[#FFF0F3] to-[#FFF8F9] border rounded-xl cursor-pointer transition-all group animate-fade-in ${
+                  isGuideMode && currentStepIndex === 1
+                    ? 'border-[#FF3F6C] ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)]'
+                    : 'border-[#FF3F6C]/25 shadow-2xs hover:border-[#FF3F6C]'
+                }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1 text-[9px] font-black text-[#FF3F6C] uppercase tracking-wider">
@@ -529,7 +551,14 @@ export default function HomePage() {
 
           {/* MODE 2: 2 OR MORE QUALIFYING ITEMS → Multi-Item Compact Scroll Shelf (Taps through to Wishlist Page) */}
           {qualifyingWishlistItems.length >= 2 && (
-            <div id="saved-items-section" className="mx-3 mt-2 p-2 bg-gradient-to-r from-[#FFF0F3] to-[#FFF8F9] border border-[#FF3F6C]/25 rounded-xl shadow-2xs animate-fade-in">
+            <div
+              id="saved-items-section"
+              className={`mx-3 mt-2 p-2 bg-gradient-to-r from-[#FFF0F3] to-[#FFF8F9] border rounded-xl animate-fade-in transition-all ${
+                isGuideMode && currentStepIndex === 1
+                  ? 'border-[#FF3F6C] ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)]'
+                  : 'border-[#FF3F6C]/25 shadow-2xs'
+              }`}
+            >
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-1 text-[9px] font-black text-[#FF3F6C] uppercase tracking-wider">
                   <Sparkles className="w-3 h-3 text-[#FF3F6C]" />

@@ -16,6 +16,7 @@ import {
 import CustomerPhotoGallery from './CustomerPhotoGallery';
 import ReviewFilterChips from './ReviewFilterChips';
 import ReviewCard from './ReviewCard';
+import { useGuide } from '../../context/GuideContext';
 
 /**
  * AllReviewsView Component
@@ -45,6 +46,9 @@ export default function AllReviewsView({
   const [activeSort, setActiveSort] = useState('helpful');
   const containerRef = useRef(null);
   const scrollBodyRef = useRef(null);
+
+  const guideContext = useGuide();
+  const isStep6 = guideContext?.isGuideMode && guideContext?.currentStepIndex === 5;
 
   // Automatically scroll both the parent phone container and inner review list to the top on mount
   useEffect(() => {
@@ -170,11 +174,23 @@ export default function AllReviewsView({
         />
 
         {/* Filter Pills Section (Stars + Trust Badges) */}
-        <div className="bg-white pt-2.5 pb-1 border-b border-[#EAEAEC]">
-          <div className="px-3 mb-1.5">
+        <div
+          id="reviews-filter-section"
+          className={`bg-white pt-2.5 pb-1 border-b border-[#EAEAEC] transition-all duration-300 ${
+            isStep6
+              ? 'ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)]'
+              : ''
+          }`}
+        >
+          <div className="px-3 mb-1.5 flex items-center justify-between">
             <span className="text-[11px] font-extrabold text-[#282C3F]">
               Filter photos and reviews by
             </span>
+            {isStep6 && (
+              <span className="text-[9.5px] font-extrabold text-[#FF3F6C] bg-[#FFF0F3] px-2 py-0.5 rounded-full border border-[#FF3F6C]/30 animate-pulse">
+                👉 Tap any badge to filter
+              </span>
+            )}
           </div>
 
           <ReviewFilterChips

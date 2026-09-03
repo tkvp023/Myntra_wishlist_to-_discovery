@@ -30,7 +30,7 @@ export default function ProfilePage() {
   const isStep7 = guideContext?.isGuideMode && guideContext?.currentStepIndex === 6;
   const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'reviews' | 'account'
 
-  // Ensure activeTab is orders and auto-scroll to review trigger when on Step 7
+  // Ensure activeTab is orders and auto-scroll to delivered order card when on Step 7
   React.useEffect(() => {
     if (isStep7) {
       setActiveTab('orders');
@@ -40,7 +40,7 @@ export default function ProfilePage() {
         if (el && mainEl) {
           const mainRect = mainEl.getBoundingClientRect();
           const elRect = el.getBoundingClientRect();
-          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 20;
+          const targetTop = mainEl.scrollTop + (elRect.top - mainRect.top) - 15;
           mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
         }
       };
@@ -333,11 +333,17 @@ export default function ProfilePage() {
           {orders.map((order) => {
             const p = order.product;
             const img = getProductImageUrl(p.images?.[0], p.category, 1);
+            const isTargetOrder = order.id === 'MYN-89342';
 
             return (
               <div
                 key={order.id}
-                className="bg-white rounded-2xl p-3 border border-[#EAEAEC] shadow-2xs space-y-3"
+                id={isTargetOrder ? 'orders-review-trigger' : undefined}
+                className={`bg-white rounded-2xl p-3 border transition-all duration-300 space-y-3 ${
+                  isStep7 && isTargetOrder
+                    ? 'ring-2 ring-[#FF3F6C] shadow-[0_0_20px_rgba(255,63,108,0.25)] border-[#FF3F6C]'
+                    : 'border-[#EAEAEC] shadow-2xs'
+                }`}
               >
                 {/* Order Status Header */}
                 <div className="flex items-center justify-between pb-2 border-b border-[#F5F5F6]">
@@ -399,22 +405,21 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 pt-1">
                   {order.isDelivered && !order.hasReviewed && (
                     <div className="flex-1 relative flex flex-col gap-1">
-                      {isStep7 && order.id === 'MYN-89342' && (
+                      {isStep7 && isTargetOrder && (
                         <div className="animate-bounce flex items-center justify-center gap-1 text-[10px] font-black text-[#FF3F6C] bg-[#FFF0F3] border border-[#FF3F6C]/40 py-1 px-2 rounded-lg shadow-xs">
                           <span>👇 Tap below to open Verified Review Form</span>
                         </div>
                       )}
                       <button
-                        id={order.id === 'MYN-89342' ? 'orders-review-trigger' : undefined}
                         type="button"
                         onClick={() => handleOpenReview(p)}
                         className={`w-full py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs ${
-                          isStep7 && order.id === 'MYN-89342'
+                          isStep7 && isTargetOrder
                             ? 'bg-[#FF3F6C] text-white hover:bg-[#E0355E] ring-4 ring-[#FF3F6C]/30 shadow-md scale-[1.01]'
                             : 'bg-[#FFF0F3] hover:bg-[#FFE0E7] text-[#FF3F6C] border border-[#FF3F6C]/30'
                         }`}
                       >
-                        <Star className={`w-3.5 h-3.5 ${isStep7 && order.id === 'MYN-89342' ? 'fill-white text-white' : 'fill-[#FF3F6C] text-[#FF3F6C]'}`} />
+                        <Star className={`w-3.5 h-3.5 ${isStep7 && isTargetOrder ? 'fill-white text-white' : 'fill-[#FF3F6C] text-[#FF3F6C]'}`} />
                         <span>Rate & Submit Badges</span>
                       </button>
                     </div>
