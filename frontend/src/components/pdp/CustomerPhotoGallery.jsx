@@ -59,9 +59,6 @@ export default function CustomerPhotoGallery({
       {/* Gallery Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
-          <h3 className="text-xs font-extrabold text-[#282C3F] uppercase tracking-wide">
-            Customer Photos ({allPhotos.length})
-          </h3>
           <span className="bg-[#E6F9F5] text-[#047857] text-[9px] font-black px-1.5 py-0.5 rounded-full border border-[#03A685]/30 flex items-center gap-0.5">
             <Sun className="w-2.5 h-2.5 text-[#03A685]" />
             <span>Natural Lighting</span>
