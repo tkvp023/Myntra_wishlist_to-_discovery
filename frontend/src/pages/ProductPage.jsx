@@ -115,8 +115,8 @@ export default function ProductPage() {
           clearTimeout(t3);
         };
       } else if (currentStepIndex === 5) {
-        // Step 6: Review Filters (Open dedicated reviews overlay with filter chips)
-        setShowAllReviews(true);
+        // Step 6: Review Filters (Stay on product page, scroll to reviews section, and point to View All)
+        setShowAllReviews(false);
         const scroll = () => {
           const el = document.getElementById('reviews-filter-section');
           const mainEl = document.querySelector('main');
@@ -290,15 +290,19 @@ export default function ProductPage() {
             Customer Reviews ({reviewCount.toLocaleString()})
           </h3>
           <div className="flex items-center gap-1.5">
-            {isGuideMode && (
-              <span className="inline-flex items-center gap-1 bg-[#FFF0F3] text-[#FF3F6C] border border-[#FF3F6C]/40 text-[9.5px] font-extrabold px-2 py-0.5 rounded-full animate-pulse shadow-2xs">
-                👉 Click to view all reviews
+            {isGuideMode && currentStepIndex === 5 && (
+              <span className="inline-flex items-center gap-1 bg-[#FF3F6C] text-white text-[9.5px] font-black px-2.5 py-1 rounded-full animate-bounce shadow-md">
+                <span>👉 Click to view all reviews</span>
               </span>
             )}
             <button
               type="button"
               onClick={() => handleOpenAllReviews()}
-              className="text-xs font-bold text-[#FF3F6C] hover:underline cursor-pointer flex items-center gap-0.5 group"
+              className={`text-xs font-black text-[#FF3F6C] hover:underline cursor-pointer flex items-center gap-0.5 group px-2 py-0.5 rounded-md transition-all ${
+                isGuideMode && currentStepIndex === 5
+                  ? 'bg-[#FFF0F3] border border-[#FF3F6C] ring-2 ring-[#FF3F6C]/40 shadow-xs'
+                  : ''
+              }`}
             >
               <span className="group-hover:translate-x-0.5 transition-transform">View All</span>
               <ChevronRight className="w-3.5 h-3.5" />

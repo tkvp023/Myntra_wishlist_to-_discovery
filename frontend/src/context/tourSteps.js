@@ -125,7 +125,7 @@ export const TOUR_STEPS = [
     badgeText: 'Review Filters',
     description:
       'Filter buttons let shoppers quickly sort reviews by specific topics like Genuine Quality, Fit, Fabric Feel, or Photo Accuracy. This lets buyers find relevant feedback without reading hundreds of reviews.',
-    actionPrompt: 'Tap any trust filter pill (e.g. Authenticity, Fit, or Fabric) to see matching verified reviews.',
+    actionPrompt: 'Look at the Ratings & Reviews section, then tap [View All] to open verified reviews and test topic filters.',
     researchMetric: 'Topic-Specific Filtering',
     researchHeading: 'Fast Answers for Buyer Concerns',
     researchQuote:
