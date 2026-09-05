@@ -1,6 +1,6 @@
-# Myntra Trust-Verified Review System MVP (v2)
+# Myntra Trust-Tags MVP (v2)
 
-A mobile-app-shaped web application replicating the Myntra mobile experience with an innovative, tap-based **Trust-Verified Review System** to solve pre-purchase hesitation and stalled purchase intent.
+A mobile-app-shaped web application replicating the Myntra mobile experience with an innovative, tap-based **Trust-Tags System** to solve pre-purchase hesitation and stalled purchase intent.
 
 ---
 

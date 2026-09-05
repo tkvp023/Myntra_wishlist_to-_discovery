@@ -22,7 +22,7 @@ export default function GuideTopBar() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF3F6C]"></span>
           </span>
           <span className="text-xs font-black text-slate-100 tracking-wide uppercase">
-            Myntra Trust MVP
+            Myntra Trust-Tags MVP
           </span>
           <span className="text-[11px] font-medium text-slate-400 border-l border-slate-700/80 pl-2 hidden xs:inline">
             Interactive Prototype

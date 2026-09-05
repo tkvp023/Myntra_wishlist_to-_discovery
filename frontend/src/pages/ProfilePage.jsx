@@ -632,7 +632,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="text-center pt-4 text-[10px] text-[#94969F]">
-            <p className="font-bold text-[#535766]">Myntra Trust-Verified Review System MVP</p>
+            <p className="font-bold text-[#535766]">Myntra Trust-Tags MVP</p>
             <p>Version 2.0.0 • Connected to Local SQLite DB</p>
           </div>
         </div>
